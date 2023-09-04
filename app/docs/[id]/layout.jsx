@@ -4,8 +4,10 @@ import Head from "next/head";
 import dynamic from "next/dynamic";
 import "../../../styles/globals.css";
 import "react-quill/dist/quill.snow.css";
+import { useEffect, useState } from "react";
 import formats from "@/utils/rich-text-editor/format";
 import modules from "@/utils/rich-text-editor/modules";
+import getEditorMDTemplate from "@/utils/rich-text-editor/sample-resume-md";
 
 const QuillWrapper = dynamic(
   async () => {
@@ -17,7 +19,11 @@ const QuillWrapper = dynamic(
   }
 );
 
-export default function DocFileLayout({ children }) {
+export default function DocFileLayout({ children, params }) {
+  const [initialValue, setInitialValue] = useState(getEditorMDTemplate(params));
+
+  useEffect(() => {}, []);
+
   return (
     <>
       <Head>
@@ -25,7 +31,12 @@ export default function DocFileLayout({ children }) {
         <meta name="description" content="Your document" />
       </Head>
       <section className="doc-editor">
-        <QuillWrapper modules={modules} formats={formats} theme="snow" />
+        <QuillWrapper
+          theme="snow"
+          modules={modules}
+          formats={formats}
+          value={initialValue}
+        />
       </section>
       {children}
     </>

@@ -17,14 +17,17 @@ export default function Home() {
       <section className="document-grid bg-grey-6 w-full py-4">
         <div className="grid-content-wrapper mx-auto">
           <span className="text-gray-900 ml-2">Start a new document</span>
-          <div className="mt-4 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5">
-            <DocsCard>
+          <div className="mt-4 flex items-center gap-4">
+            <DocsCard baseText="Blank" paramId="new">
               <Image
                 width={144}
                 height={192}
                 alt="Picture of the author"
                 src="https://ssl.gstatic.com/docs/templates/thumbnails/docs-blank-googlecolors.png"
               />
+            </DocsCard>
+            <DocsCard baseText="Resume" paramId="resume">
+              <h1 className="font-bold">RESUME</h1>
             </DocsCard>
           </div>
         </div>
