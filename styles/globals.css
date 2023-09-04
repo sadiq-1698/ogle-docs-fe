@@ -11,6 +11,24 @@ body {
     @apply w-full;
 }
 
+.doc-editor .quill .ql-toolbar.ql-snow {
+    @apply flex justify-center w-11/12 mx-auto bg-grey-6 rounded-3xl border-none p-0;
+}
+
+.doc-editor .quill .ql-toolbar.ql-snow .ql-formats {
+    @apply p-2 bg-grey-6 rounded-md;
+}
+
+.doc-editor .quill .ql-container.ql-snow {
+    @apply w-full flex justify-center pt-8 border-b-0 border-l-0 border-r-0 mt-6;
+    border-top: 1px solid #dfdada!important;
+}
+
+.doc-editor .quill .ql-container.ql-snow .ql-editor{
+    @apply w-full lg:w-1/2 shadow-lg;
+    min-height: calc(100vh - 155px);
+}
+
 @media only screen and (min-width: 1024px) {
     .grid-content-wrapper {
         max-width: 1024px;
