@@ -27,7 +27,7 @@ export default function FormHeader({
         {paragraph}
         <Link
           href={linkUrl}
-          className="font-medium text-purple-600 hover:text-purple-500"
+          className="font-semibold text-purple-600 hover:text-purple-500"
         >
           {linkName}
         </Link>

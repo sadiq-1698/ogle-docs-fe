@@ -16,7 +16,7 @@ export default function FormAction({
         <button
           type={action}
           disabled={disabled}
-          className={`${cursorClass} ${verticalPadding} disabled:bg-opacity-50 group relative w-full flex justify-center px-4 border border-transparent text-sm font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500`}
+          className={`${cursorClass} ${verticalPadding} disabled:bg-opacity-50 group relative w-full flex justify-center px-4 border border-transparent text-sm font-semibold rounded-md text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500`}
           onSubmit={handleSubmit}
         >
           {disabled ? <Spinner size={40} /> : text}
