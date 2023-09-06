@@ -14,6 +14,7 @@ export default function Home() {
         </NavLogo>
         <NavSearch />
       </Nav>
+      <div className="nav-holder h-14 w-full"></div>
       <section className="document-grid bg-grey-6 w-full py-4">
         <div className="grid-content-wrapper mx-auto">
           <span className="text-gray-900 ml-2">Start a new document</span>

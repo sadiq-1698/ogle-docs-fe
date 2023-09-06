@@ -30,6 +30,7 @@ export default function DocFileLayout({ children, params }) {
         <title>"Document | Ogle Docs"</title>
         <meta name="description" content="Your document" />
       </Head>
+      <div className="nav-holder h-14 w-full"></div>
       <section className="doc-editor">
         <QuillWrapper
           theme="snow"

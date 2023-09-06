@@ -29,6 +29,20 @@ body {
     min-height: calc(100vh - 155px);
 }
 
+@keyframes rotating {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.rotating {
+    animation: rotating 1s linear infinite;
+    -webkit-animation: rotating 1s linear infinite;
+}
+
 @media only screen and (min-width: 1024px) {
     .grid-content-wrapper {
         max-width: 1024px;
