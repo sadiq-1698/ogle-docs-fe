@@ -15,6 +15,10 @@ const DocumentSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "users",
+    },
   },
   {
     timestamps: true,

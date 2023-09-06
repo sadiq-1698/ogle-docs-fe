@@ -6,6 +6,7 @@ import Input from "@/components/input";
 import FormAction from "@/components/auth/form-action";
 import FormHeader from "@/components/auth/form-header";
 import { LOGIN_FIELDS, REGISTER_FIELDS } from "@/enums";
+import { userRegister } from "@/utils/api/auth/register";
 import getDisplayTexts from "@/utils/auth/get-display-texts";
 
 const loginFields = LOGIN_FIELDS;
@@ -29,10 +30,26 @@ export default function AuthLayout({ params }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [fieldsState, setFieldsState] = useState(currentFieldState);
 
-  const handleSubmit = async (e, callBack) => {
+  const handleRegister = async () => {
+    if (
+      fieldsState.password.trim().toString() !==
+      fieldsState.confirm_password.trim().toString()
+    ) {
+      setErrorState(true);
+      setErrorMsg("Passwords not matching!");
+      return;
+    }
+    const response = await userRegister(fieldsState);
+    console.log("response", response);
+    // if (response.data) navigate("/login");
+  };
+
+  const handleLogin = async () => {};
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    await callBack();
+    isLoginMode ? await handleLogin() : await handleRegister();
     setIsSubmitting(false);
   };
 
@@ -49,10 +66,7 @@ export default function AuthLayout({ params }) {
           linkName={displayTexts.linkName}
           paragraph={displayTexts.paragraph}
         />
-        <form
-          className="mt-8 space-y-6"
-          onSubmit={(e) => handleSubmit(e, () => {})}
-        >
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div>
             {fields.map((field) => (
               <div className="mb-3" key={field.id}>
