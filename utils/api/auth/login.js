@@ -1,9 +1,7 @@
 import handleResponse from "../handle-response";
 
-const SERVER_ENDPOINT = "http://localhost:3000";
-
 export async function userLogin(loginData) {
-  const response = await fetch(`${SERVER_ENDPOINT}/api/feedbacks/`, {
+  const response = await fetch(`/api/auth/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

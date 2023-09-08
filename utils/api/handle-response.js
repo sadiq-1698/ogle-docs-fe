@@ -3,16 +3,8 @@ async function handleResponse(response) {
   const isJson = contentType.includes("application/json");
   const data = isJson ? await response.json() : await response.text();
 
-  console.log("data", data);
-
-  if (!response.ok) {
-    const message = isJson
-      ? data.message || response.statusText
-      : response.statusText;
-    throw new Error(message);
-  }
-
-  return data;
+  if (!response.ok) return { error: "Some error occured" };
+  return { data: data };
 }
 
 export default handleResponse;

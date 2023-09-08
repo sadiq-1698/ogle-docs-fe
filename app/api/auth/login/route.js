@@ -1,24 +1,22 @@
 import bcrypt from "bcrypt";
-import userModel from "../../../models/user";
 import { NextResponse } from "next/server";
+import userModel from "../../../../models/user";
 import connectToDatabase from "@/lib/db-connect";
 
 const BCRYPT_SALT_ROUNDS = 12;
 
 export async function POST(request) {
   try {
-    const json = await request.json();
-
-    console.log("json", json);
+    const jsonBody = await request.json();
 
     await connectToDatabase();
 
-    const { username, name, password } = request.body;
+    const { username, name, password } = jsonBody;
 
     const userExists = await userModel.findOne({ username: username });
 
     if (userExists)
-      new NextResponse(
+      return new NextResponse(
         JSON.stringify({ message: "Username has already been taken" }),
         {
           status: 409,

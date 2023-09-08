@@ -3,11 +3,15 @@
 import { useState } from "react";
 import "../../../styles/globals.css";
 import Input from "@/components/input";
+import { useRouter } from "next/navigation";
+import { userLogin } from "@/utils/api/auth/login";
 import FormAction from "@/components/auth/form-action";
 import FormHeader from "@/components/auth/form-header";
 import { LOGIN_FIELDS, REGISTER_FIELDS } from "@/enums";
 import { userRegister } from "@/utils/api/auth/register";
 import getDisplayTexts from "@/utils/auth/get-display-texts";
+import registerInvalid from "@/utils/validators/register";
+import loginInvalid from "@/utils/validators/login";
 
 const loginFields = LOGIN_FIELDS;
 const registerFields = REGISTER_FIELDS;
@@ -19,6 +23,8 @@ let regFieldsState = {};
 registerFields.forEach((field) => (regFieldsState[field.id] = ""));
 
 export default function AuthLayout({ params }) {
+  const router = useRouter();
+
   const authMode = params.mode.toString();
   const isLoginMode = authMode === "login";
   const displayTexts = getDisplayTexts(isLoginMode);
@@ -31,20 +37,24 @@ export default function AuthLayout({ params }) {
   const [fieldsState, setFieldsState] = useState(currentFieldState);
 
   const handleRegister = async () => {
-    if (
-      fieldsState.password.trim().toString() !==
-      fieldsState.confirm_password.trim().toString()
-    ) {
+    if (registerInvalid(fieldsState)) {
       setErrorState(true);
       setErrorMsg("Passwords not matching!");
       return;
     }
     const response = await userRegister(fieldsState);
-    console.log("response", response);
-    // if (response.data) navigate("/login");
+    if (response.data) router.push("/auth/login");
   };
 
-  const handleLogin = async () => {};
+  const handleLogin = async () => {
+    if (loginInvalid(fieldsState)) {
+      setErrorState(true);
+      setErrorMsg("Please fill the fields!");
+      return;
+    }
+    const response = await userLogin(fieldsState);
+    if (response.data) router.push("/");
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -56,6 +66,8 @@ export default function AuthLayout({ params }) {
   const handleChange = (e) => {
     setFieldsState({ ...fieldsState, [e.target.id]: e.target.value });
   };
+
+  console.log(process.env.MONGO_URL);
 
   return (
     <div className="min-h-full h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -85,7 +97,7 @@ export default function AuthLayout({ params }) {
                 />
               </div>
             ))}
-            <div className="h-3">
+            <div className="h-3 mb-0.5">
               {errorState && <p className="text-xs text-red-800">{errorMsg}</p>}
             </div>
             <FormAction

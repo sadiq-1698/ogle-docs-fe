@@ -1,14 +1,12 @@
 import handleResponse from "../handle-response";
 
-const SERVER_ENDPOINT = "http://localhost:3000";
-
 export async function userRegister(regData) {
-  const response = await fetch(`${SERVER_ENDPOINT}/api/auth/`, {
+  const response = await fetch(`/api/auth/register`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: regData,
+    body: JSON.stringify(regData),
   });
 
   return handleResponse(response).then((data) => data);
