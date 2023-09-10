@@ -1,9 +1,18 @@
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 import { NextResponse } from "next/server";
 import userModel from "../../../../models/user";
 import connectToDatabase from "@/lib/db-connect";
 
-const BCRYPT_SALT_ROUNDS = 12;
+function createUserInfoObject(allowedInfo, userObject) {
+  let result = {};
+  for (let i = 0; i < allowedInfo.length; i++) {
+    if (userObject[allowedInfo[i]]) {
+      result[allowedInfo[i]] = userObject[allowedInfo[i]];
+    }
+  }
+  return result;
+}
 
 export async function POST(request) {
   try {
@@ -11,33 +20,41 @@ export async function POST(request) {
 
     await connectToDatabase();
 
-    const { username, name, password } = jsonBody;
+    const { username, password } = jsonBody;
+
+    const allowedUserInfo = ["_id", "name", "usernme"];
 
     const userExists = await userModel.findOne({ username: username });
 
-    if (userExists)
+    if (!userExists)
       return new NextResponse(
-        JSON.stringify({ message: "Username has already been taken" }),
+        JSON.stringify({ message: "User does not exist" }),
         {
-          status: 409,
+          status: 404,
           headers: { "Content-Type": "application/json" },
         }
       );
 
-    const _password = await bcrypt.hash(password, BCRYPT_SALT_ROUNDS);
+    const userInfo = createUserInfoObject(allowedUserInfo, userExists);
 
-    const user = new userModel({
-      name: name,
-      username: username,
-      password: _password,
-    });
+    const isValidPassword = await bcrypt.compare(password, userExists.password);
 
-    await user.save();
+    if (!isValidPassword) {
+      return new NextResponse(
+        JSON.stringify({ message: "Incorrect email/password" }),
+        {
+          status: 403,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+    }
+
+    const jwtToken = jwt.sign({ id: userExists._id }, process.env.SECRET);
 
     return new NextResponse(
-      JSON.stringify({ message: "Registered successfully" }),
+      JSON.stringify({ ...userInfo, userToken: jwtToken }),
       {
-        status: 201,
+        status: 200,
         headers: { "Content-Type": "application/json" },
       }
     );

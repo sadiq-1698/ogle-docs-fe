@@ -53,7 +53,11 @@ export default function AuthLayout({ params }) {
       return;
     }
     const response = await userLogin(fieldsState);
-    if (response.data) router.push("/");
+    if (response.data) {
+      const accessToken = response.data.userToken;
+      localStorage.setItem("accessToken", accessToken);
+      router.push("/");
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -66,8 +70,6 @@ export default function AuthLayout({ params }) {
   const handleChange = (e) => {
     setFieldsState({ ...fieldsState, [e.target.id]: e.target.value });
   };
-
-  console.log(process.env.MONGO_URL);
 
   return (
     <div className="min-h-full h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">

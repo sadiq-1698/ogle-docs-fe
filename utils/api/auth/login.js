@@ -6,7 +6,7 @@ export async function userLogin(loginData) {
     headers: {
       "Content-Type": "application/json",
     },
-    body: loginData,
+    body: JSON.stringify(loginData),
   });
 
   return handleResponse(response).then((data) => data);
