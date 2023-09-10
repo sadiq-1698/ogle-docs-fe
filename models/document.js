@@ -11,6 +11,10 @@ const DocumentSchema = new mongoose.Schema(
       required: true,
       default: "",
     },
+    isTemplate: {
+      type: Boolean,
+      default: false,
+    },
     starred: {
       type: Boolean,
       default: false,

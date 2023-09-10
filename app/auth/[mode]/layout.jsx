@@ -3,7 +3,6 @@
 import { useState } from "react";
 import "../../../styles/globals.css";
 import Input from "@/components/input";
-import { useRouter } from "next/navigation";
 import { userLogin } from "@/utils/api/auth/login";
 import loginInvalid from "@/utils/validators/login";
 import FormAction from "@/components/auth/form-action";
@@ -11,6 +10,7 @@ import FormHeader from "@/components/auth/form-header";
 import { LOGIN_FIELDS, REGISTER_FIELDS } from "@/enums";
 import { userRegister } from "@/utils/api/auth/register";
 import registerInvalid from "@/utils/validators/register";
+import { useRouter, useSearchParams } from "next/navigation";
 import getDisplayTexts from "@/utils/auth/get-display-texts";
 
 const loginFields = LOGIN_FIELDS;
@@ -24,8 +24,10 @@ registerFields.forEach((field) => (regFieldsState[field.id] = ""));
 
 export default function AuthLayout({ params }) {
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const authMode = params.mode.toString();
+  const nextUrl = searchParams.get("next");
   const isLoginMode = authMode === "login";
   const displayTexts = getDisplayTexts(isLoginMode);
   const fields = isLoginMode ? loginFields : registerFields;
@@ -54,7 +56,8 @@ export default function AuthLayout({ params }) {
     }
     const response = await userLogin(fieldsState);
     if (response.data?._id) {
-      router.push("/");
+      localStorage.setItem("userId", response.data?._id);
+      router.replace(nextUrl ? nextUrl : "/");
     } else {
       setErrorState(true);
       setErrorMsg(response.error);

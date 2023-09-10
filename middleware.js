@@ -5,8 +5,6 @@ import { verifyJwtToken } from "./lib/auth";
 export async function middleware(request) {
   const { url, nextUrl, cookies } = request;
 
-  console.log("jinglis nextUrl", nextUrl);
-
   const { value: token } = cookies.get("accessToken") ?? { value: null };
 
   const hasVerifiedToken = token && (await verifyJwtToken(token));
