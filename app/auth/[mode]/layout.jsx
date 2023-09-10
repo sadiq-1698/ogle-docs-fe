@@ -5,13 +5,13 @@ import "../../../styles/globals.css";
 import Input from "@/components/input";
 import { useRouter } from "next/navigation";
 import { userLogin } from "@/utils/api/auth/login";
+import loginInvalid from "@/utils/validators/login";
 import FormAction from "@/components/auth/form-action";
 import FormHeader from "@/components/auth/form-header";
 import { LOGIN_FIELDS, REGISTER_FIELDS } from "@/enums";
 import { userRegister } from "@/utils/api/auth/register";
-import getDisplayTexts from "@/utils/auth/get-display-texts";
 import registerInvalid from "@/utils/validators/register";
-import loginInvalid from "@/utils/validators/login";
+import getDisplayTexts from "@/utils/auth/get-display-texts";
 
 const loginFields = LOGIN_FIELDS;
 const registerFields = REGISTER_FIELDS;
@@ -53,10 +53,11 @@ export default function AuthLayout({ params }) {
       return;
     }
     const response = await userLogin(fieldsState);
-    if (response.data) {
-      const accessToken = response.data.userToken;
-      localStorage.setItem("accessToken", accessToken);
+    if (response.data?._id) {
       router.push("/");
+    } else {
+      setErrorState(true);
+      setErrorMsg(response.error);
     }
   };
 

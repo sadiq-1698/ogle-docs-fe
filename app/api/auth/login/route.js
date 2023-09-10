@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+import { SignJWT } from "jose";
 import { NextResponse } from "next/server";
+import { getJwtSecretKey } from "@/lib/auth";
 import userModel from "../../../../models/user";
 import connectToDatabase from "@/lib/db-connect";
 
@@ -49,15 +50,24 @@ export async function POST(request) {
       );
     }
 
-    const jwtToken = jwt.sign({ id: userExists._id }, process.env.SECRET);
+    const jwtToken = await new SignJWT({ id: userExists._id })
+      .setProtectedHeader({ alg: "HS256" })
+      .setIssuedAt()
+      .setExpirationTime(`${3600 * 24}s`)
+      .sign(getJwtSecretKey());
 
-    return new NextResponse(
-      JSON.stringify({ ...userInfo, userToken: jwtToken }),
-      {
-        status: 200,
-        headers: { "Content-Type": "application/json" },
-      }
-    );
+    const response = new NextResponse(JSON.stringify({ ...userInfo }), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
+
+    response.cookies.set({
+      name: "accessToken",
+      value: jwtToken,
+      path: "/",
+    });
+
+    return response;
   } catch (error) {
     return new NextResponse(JSON.stringify(error), {
       status: 404,
