@@ -15,6 +15,15 @@ const ioHandler = (req, res) => {
       addTrailingSlash: false,
     });
     res.socket.server.io = io;
+
+    io.listen(3001);
+
+    io?.on("connection", (socket) => {
+      socket.on("input-change", (msg) => {
+        console.log("socket from server side with message -", msg);
+        socket.broadcast?.emit("update-input", msg);
+      });
+    });
   }
 
   res.end();

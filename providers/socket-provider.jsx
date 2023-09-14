@@ -27,6 +27,10 @@ export const SocketProvider = ({ children }) => {
       setIsConnected(true);
     });
 
+    socketInstance.on("update-input", (msg) => {
+      console.log("At client side", msg);
+    });
+
     socketInstance.on("disconnect", () => {
       setIsConnected(false);
     });
