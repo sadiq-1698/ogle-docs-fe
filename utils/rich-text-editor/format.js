@@ -17,6 +17,9 @@ const formats = [
   "link",
   "image",
   "video",
+  "color",
+  "background",
+  "code-block"
 ];
 
 export default formats;

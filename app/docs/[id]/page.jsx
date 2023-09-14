@@ -1,9 +1,14 @@
+"use client";
+
 import Nav from "@/components/nav";
 import NavLogo from "@/components/nav-logo";
+import { useSocket } from "@/providers/socket-provider";
 import DocStatusBtns from "@/components/doc-status-btns";
 import getDocumentName from "@/utils/rich-text-editor/get-document-name";
 
 export default function DocFilePage({ params }) {
+  const { isConnected } = useSocket();
+
   return (
     <>
       <Nav>

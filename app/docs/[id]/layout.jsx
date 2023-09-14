@@ -7,6 +7,7 @@ import "react-quill/dist/quill.snow.css";
 import { useEffect, useState } from "react";
 import formats from "@/utils/rich-text-editor/format";
 import modules from "@/utils/rich-text-editor/modules";
+import { SocketProvider } from "@/providers/socket-provider";
 import getEditorMDTemplate from "@/utils/rich-text-editor/sample-resume-md";
 
 const QuillWrapper = dynamic(
@@ -30,16 +31,19 @@ export default function DocFileLayout({ children, params }) {
         <title>"Document | Ogle Docs"</title>
         <meta name="description" content="Your document" />
       </Head>
-      <div className="nav-holder h-14 w-full"></div>
-      <section className="doc-editor">
-        <QuillWrapper
-          theme="snow"
-          modules={modules}
-          formats={formats}
-          value={initialValue}
-        />
-      </section>
-      {children}
+      <SocketProvider>
+        <div className="nav-holder h-14 w-full"></div>
+        <section className="doc-editor">
+          <QuillWrapper
+            onChange={(e) => {}}
+            theme="snow"
+            modules={modules}
+            formats={formats}
+            value={initialValue}
+          />
+        </section>
+        {children}
+      </SocketProvider>
     </>
   );
 }

@@ -7,7 +7,7 @@ export const SAMPLE_RESUME_MD = `<br><br>
 <h2>Emily</h2>
 <hr />
 <br>
-<p class="head">Interests</p>
+<p>Interests</p>
 <ul>
   <li>Drawing</li>
   <li>Photography</li>
@@ -15,11 +15,11 @@ export const SAMPLE_RESUME_MD = `<br><br>
   <li>Programming</li>
   <li>Computer Science</li>
 </ul>
-<p class="head">Skills</p>
+<p>Skills</p>
 <ul>
   <li>Web Design with HTML & CSS</li>
 </ul>
-<p class="head">Education</p>
+<p>Education</p>
 <ul>
   <a href="http://www.wiltonhighschool.org/pages/Wilton_High_School">
     <li>Wilton High School</li>
@@ -30,12 +30,12 @@ export const SAMPLE_RESUME_MD = `<br><br>
   </a>
   <li>Codeacademy</li>
 </ul>
-<p class="head">Experience</p>
+<p>Experience</p>
 <ul>
   <li>Student Technology Intern for Wilton School District</li>
   <li>Babysitter</li>
 </ul>
-<p class="head">Extracurriculars</p>
+<p>Extracurriculars</p>
 <ul>
   <li>Recycling Club</li>
   <li>Gardening Club</li>
