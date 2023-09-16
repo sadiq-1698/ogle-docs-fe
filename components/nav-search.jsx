@@ -1,8 +1,17 @@
+"use client";
+
 import "../styles/globals.css";
+import { useState } from "react";
 
 export default function NavSearch() {
+  const [shadow, setShadow] = useState(false);
+
   return (
-    <div className="nav-search bg-grey-6 p-1 flex items-center w-4/12 h-11 rounded-md">
+    <div
+      className={`nav-search bg-grey-6 p-1 flex items-center w-4/12 h-11 rounded-md ${
+        shadow ? "search-shadow" : ""
+      }`}
+    >
       <button
         role="button"
         aria-label="Search"
@@ -22,6 +31,8 @@ export default function NavSearch() {
       </button>
       <input
         placeholder="Search"
+        onFocus={() => setShadow(true)}
+        onBlur={() => setShadow(false)}
         className="h-full w-11/12 px-2 bg-transparent outline-none"
       ></input>
     </div>
