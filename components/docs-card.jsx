@@ -1,17 +1,33 @@
-import Link from "next/link";
-import "../styles/globals.css";
+"use client";
 
-export default function DocsCard({ doc, children }) {
-  const { _id, name } = doc;
+import "../styles/globals.css";
+import { useRouter } from "next/navigation";
+import { createDocument } from "@/utils/api/docs/create";
+
+export default function DocsCard({ doc, isTemplate, children }) {
+  const router = useRouter();
+  const { name } = doc;
+
+  const handleDocCreate = async () => {
+    if (isTemplate) {
+      const response = await createDocument(doc);
+      if (response.data) {
+        router.push(`docs/${response.data.docId}`);
+      }
+    }
+  };
 
   return (
-    <Link href={`docs/${_id}`}>
-      <div className="bg-white flex items-center justify-center border border-solid border-grey-1 w-36 h-48 cursor-pointer hover:border-blue-600">
+    <div>
+      <button
+        onClick={() => handleDocCreate()}
+        className="bg-white flex items-center justify-center border border-solid border-grey-1 w-36 h-48 cursor-pointer hover:border-blue-600"
+      >
         {children}
-      </div>
+      </button>
       <span className="mt-2 inline-block ml-1 font-semibold text-sm">
         {name}
       </span>
-    </Link>
+    </div>
   );
 }

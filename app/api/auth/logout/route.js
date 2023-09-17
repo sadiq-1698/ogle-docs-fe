@@ -1,22 +1,15 @@
-import { NextResponse } from "next/server";
+import responseTemplate from "@/utils/api/response-template";
 
 export async function GET() {
   try {
-    const response = new NextResponse(
-      JSON.stringify({ message: "Logged out!" }),
-      {
-        status: 200,
-        headers: { "Content-Type": "application/json" },
-      }
-    );
+    responseTemplate(200, { message: "Logged out!" });
+
+    const response = responseTemplate(200, { message: "Logged out!" });
 
     response.cookies.delete("accessToken");
 
     return response;
   } catch (error) {
-    return new NextResponse(JSON.stringify(error), {
-      status: 404,
-      headers: { "Content-Type": "application/json" },
-    });
+    return responseTemplate(404, error);
   }
 }

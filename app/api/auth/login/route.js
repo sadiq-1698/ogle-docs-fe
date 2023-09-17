@@ -1,9 +1,9 @@
 import bcrypt from "bcrypt";
 import { SignJWT } from "jose";
-import { NextResponse } from "next/server";
 import { getJwtSecretKey } from "@/lib/auth";
 import userModel from "../../../../models/user";
 import connectToDatabase from "@/lib/db-connect";
+import responseTemplate from "@/utils/api/response-template";
 
 function createUserInfoObject(allowedInfo, userObject) {
   let result = {};
@@ -27,27 +27,16 @@ export async function POST(request) {
 
     const userExists = await userModel.findOne({ username: username });
 
-    if (!userExists)
-      return new NextResponse(
-        JSON.stringify({ message: "User does not exist" }),
-        {
-          status: 404,
-          headers: { "Content-Type": "application/json" },
-        }
-      );
+    if (!userExists) {
+      return responseTemplate(404, { message: "User does not exist" });
+    }
 
     const userInfo = createUserInfoObject(allowedUserInfo, userExists);
 
     const isValidPassword = await bcrypt.compare(password, userExists.password);
 
     if (!isValidPassword) {
-      return new NextResponse(
-        JSON.stringify({ message: "Incorrect email/password" }),
-        {
-          status: 403,
-          headers: { "Content-Type": "application/json" },
-        }
-      );
+      return responseTemplate(403, { message: "Incorrect email/password" });
     }
 
     const jwtToken = await new SignJWT({ id: userExists._id })
@@ -56,10 +45,7 @@ export async function POST(request) {
       .setExpirationTime(`${3600 * 24}s`)
       .sign(getJwtSecretKey());
 
-    const response = new NextResponse(JSON.stringify({ ...userInfo }), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
-    });
+    const response = responseTemplate(200, { ...userInfo });
 
     response.cookies.set({
       name: "accessToken",
@@ -69,9 +55,6 @@ export async function POST(request) {
 
     return response;
   } catch (error) {
-    return new NextResponse(JSON.stringify(error), {
-      status: 404,
-      headers: { "Content-Type": "application/json" },
-    });
+    return responseTemplate(404, error);
   }
 }

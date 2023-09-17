@@ -6,7 +6,7 @@ const getEditorMDTemplate = (params) => {
   } else if (params.id.toString() === RESUME) {
     return SAMPLE_RESUME_MD;
   } else {
-    return `<p>This is ${params.id.toString()} document</p>`;
+    return null;
   }
 };
 

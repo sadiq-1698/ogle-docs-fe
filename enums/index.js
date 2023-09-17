@@ -2,9 +2,6 @@ export const NEW = "new";
 export const BLANK = "blank";
 export const RESUME = "resume";
 
-export const BLANK_DOC = { _id: "new", name: "Blank" };
-export const RESUME_DOC = { _id: "resume", name: "Resume" };
-
 export const SAMPLE_RESUME_MD = `<br><br>
 <h1>Resume</h1>
 <h2>Emily</h2>
@@ -44,6 +41,13 @@ export const SAMPLE_RESUME_MD = `<br><br>
   <li>Gardening Club</li>
   <li>Book Club</li>
 </ul>`;
+
+export const BLANK_DOC = { _id: "new", name: "Blank", content: " " };
+export const RESUME_DOC = {
+  _id: "resume",
+  name: "Resume",
+  content: SAMPLE_RESUME_MD,
+};
 
 export const LOGIN_FIELDS = [
   {

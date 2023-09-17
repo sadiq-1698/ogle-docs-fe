@@ -34,7 +34,7 @@ export default function Home() {
         <div className="grid-content-wrapper mx-auto">
           <span className="text-gray-900 ml-2">Start a new document</span>
           <div className="mt-4 flex items-center gap-4">
-            <DocsCard doc={BLANK_DOC}>
+            <DocsCard doc={BLANK_DOC} isTemplate>
               <Image
                 width={144}
                 height={192}
@@ -42,7 +42,7 @@ export default function Home() {
                 src="https://ssl.gstatic.com/docs/templates/thumbnails/docs-blank-googlecolors.png"
               />
             </DocsCard>
-            <DocsCard doc={RESUME_DOC}>
+            <DocsCard doc={RESUME_DOC} isTemplate>
               <h1 className="font-bold">RESUME</h1>
             </DocsCard>
           </div>
@@ -51,7 +51,7 @@ export default function Home() {
       <section className="document-grid bg-white w-full py-4">
         <div className="grid-content-wrapper mx-auto">
           <span className="text-gray-900 ml-2">Your documents</span>
-          <div className="mt-4 flex items-center gap-4">
+          <div className="mt-4 flex items-center gap-4 flex-wrap">
             {documents &&
               documents.length > 0 &&
               documents.map((doc) => {
