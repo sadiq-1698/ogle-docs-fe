@@ -28,7 +28,7 @@ export const SocketProvider = ({ children }) => {
     });
 
     socketInstance.on("update-input", (msg) => {
-      console.log("At client side", msg);
+      // console.log("At client side", msg);
     });
 
     socketInstance.on("disconnect", () => {

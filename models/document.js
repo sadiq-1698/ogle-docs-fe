@@ -15,7 +15,7 @@ const DocumentSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    starred: {
+    isStarred: {
       type: Boolean,
       default: false,
     },
@@ -29,5 +29,6 @@ const DocumentSchema = new mongoose.Schema(
   }
 );
 
-const document = mongoose.model("documents", DocumentSchema);
+const document =
+  mongoose.models.documents || mongoose.model("documents", DocumentSchema);
 module.exports = document;

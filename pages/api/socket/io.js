@@ -20,7 +20,7 @@ const ioHandler = (req, res) => {
 
     io?.on("connection", (socket) => {
       socket.on("input-change", (msg) => {
-        console.log("socket from server side with message -", msg);
+        // console.log("socket from server side with message -", msg);
         socket.broadcast?.emit("update-input", msg);
       });
     });
