@@ -1,7 +1,7 @@
 "use client";
 
 import { io as ClientIO } from "socket.io-client";
-import { createContext, useContext, useEffect, useState } from "react";
+import { useState, useEffect, useContext, createContext } from "react";
 
 const SocketContext = createContext({
   socket: null,
@@ -14,7 +14,9 @@ export const useSocket = () => {
 
 export const SocketProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
+  const [isSaving, setIsSaving] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
+  const [documentValue, setDocumentValue] = useState("");
 
   useEffect(() => {
     // TODO : change the path before deploying
@@ -24,11 +26,17 @@ export const SocketProvider = ({ children }) => {
     });
 
     socketInstance.on("connect", () => {
+      console.log("Socket connected!");
       setIsConnected(true);
     });
 
-    socketInstance.on("update-input", (msg) => {
-      // console.log("At client side", msg);
+    socketInstance.on("output-change", (inputChanges) => {
+      console.log("At client side", inputChanges);
+    });
+
+    socketInstance.on("saved-changes", (status) => {
+      console.log("At client side status", status);
+      setIsSaving(false);
     });
 
     socketInstance.on("disconnect", () => {
@@ -43,7 +51,16 @@ export const SocketProvider = ({ children }) => {
   }, []);
 
   return (
-    <SocketContext.Provider value={{ socket, isConnected }}>
+    <SocketContext.Provider
+      value={{
+        socket,
+        isSaving,
+        setIsSaving,
+        isConnected,
+        documentValue,
+        setDocumentValue,
+      }}
+    >
       {children}
     </SocketContext.Provider>
   );

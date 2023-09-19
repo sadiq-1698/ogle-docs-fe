@@ -16,7 +16,7 @@ export const QuillWrapper = dynamic(
   }
 );
 
-export default function DocFileLayout({ children }) {
+export default function DocFileLayout({ children, params }) {
   return (
     <>
       <Head>

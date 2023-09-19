@@ -1,4 +1,7 @@
 import { Server as ServerIO } from "socket.io";
+import userModel from "../../../models/user";
+import documentModel from "../../../models/document";
+import connectToDatabase from "@/lib/db-connect";
 
 export const config = {
   api: {
@@ -19,9 +22,24 @@ const ioHandler = (req, res) => {
     io.listen(3001);
 
     io?.on("connection", (socket) => {
-      socket.on("input-change", (msg) => {
-        // console.log("socket from server side with message -", msg);
-        socket.broadcast?.emit("update-input", msg);
+      socket.on("input-change", (inputChanges) => {
+        const room = inputChanges.docId;
+        if (!room) return;
+
+        socket.emit("output-change", inputChanges);
+      });
+
+      socket.on("save-changes", async (saveChanges) => {
+        await connectToDatabase();
+
+        try {
+          await documentModel.findByIdAndUpdate(saveChanges.docId, {
+            content: saveChanges.content,
+          });
+          socket.emit("saved-changes", "true");
+        } catch (error) {
+          socket.emit("saved-changes", "false");
+        }
       });
     });
   }
