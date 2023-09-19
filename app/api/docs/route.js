@@ -57,3 +57,19 @@ export async function GET(request) {
     return responseTemplate(404, error);
   }
 }
+
+export async function DELETE(request) {
+  try {
+    const checkAuth = await authCheck(request);
+    if (!checkAuth.auth) return checkAuth.response;
+
+    await connectToDatabase();
+    await documentModel.deleteMany({});
+
+    return responseTemplate(200, {
+      message: "Documents cleared successfully",
+    });
+  } catch (error) {
+    return responseTemplate(404, error);
+  }
+}
