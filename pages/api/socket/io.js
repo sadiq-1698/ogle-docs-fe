@@ -1,7 +1,6 @@
 import { Server as ServerIO } from "socket.io";
-import userModel from "../../../models/user";
-import documentModel from "../../../models/document";
 import connectToDatabase from "@/lib/db-connect";
+import documentModel from "../../../models/document";
 
 export const config = {
   api: {
@@ -22,24 +21,27 @@ const ioHandler = (req, res) => {
     io.listen(3001);
 
     io?.on("connection", (socket) => {
-      socket.on("input-change", (inputChanges) => {
-        const room = inputChanges.docId;
-        if (!room) return;
-
-        socket.emit("output-change", inputChanges);
-      });
-
       socket.on("save-changes", async (saveChanges) => {
         await connectToDatabase();
 
         try {
           await documentModel.findByIdAndUpdate(saveChanges.docId, {
-            content: saveChanges.content,
+            ...saveChanges.changes,
           });
-          socket.emit("saved-changes", "true");
+          socket.emit("saved-changes", {
+            ...saveChanges.changes,
+          });
         } catch (error) {
-          socket.emit("saved-changes", "false");
+          socket.emit("saved-changes", 0);
         }
+      });
+
+      socket.on("join-doc", (roomId) => {
+        socket.join(roomId);
+
+        socket.on("input-change", (doc) => {
+          io.to(roomId).emit("output-change", doc);
+        });
       });
     });
   }

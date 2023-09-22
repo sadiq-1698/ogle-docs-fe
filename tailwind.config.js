@@ -12,6 +12,9 @@ module.exports = {
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
+      boxShadow: {
+        'search': '0 1px 1px 0 rgb(65 69 73 / 30%), 0 1px 3px 1px rgb(65 69 73 / 15%)',
+      },
       colors: {
         brand: "#f1f3f4",
         black: {
@@ -32,6 +35,7 @@ module.exports = {
         blue: {
           default: "blue",
           1: "#00235B",
+          2: "#c2e7ff"
         },
       },
     },

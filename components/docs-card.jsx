@@ -6,14 +6,14 @@ import { createDocument } from "@/utils/api/docs/create";
 
 export default function DocsCard({ doc, isTemplate, children }) {
   const router = useRouter();
-  const { name } = doc;
+  const { _id, name } = doc;
 
   const handleDocCreate = async () => {
     if (isTemplate) {
       const response = await createDocument(doc);
-      if (response.data) {
-        router.push(`docs/${response.data.docId}`);
-      }
+      if (response.data) router.push(`docs/${response.data.docId}`);
+    } else {
+      router.push(`docs/${_id}`);
     }
   };
 

@@ -1,91 +1,142 @@
 "use client";
 
 import Nav from "@/components/nav";
-import { RESUME, NEW } from "@/enums";
+import debounce from "lodash.debounce";
 import { QuillWrapper } from "./layout";
-import { useCallback, useEffect, useState } from "react";
 import NavLogo from "@/components/nav-logo";
 import formats from "@/utils/rich-text-editor/format";
 import modules from "@/utils/rich-text-editor/modules";
 import { useSocket } from "@/providers/socket-provider";
 import { getDocById } from "@/utils/api/docs/get-by-id";
 import DocStatusBtns from "@/components/doc-status-btns";
+import { useCallback, useEffect, useState } from "react";
 import getDocumentName from "@/utils/rich-text-editor/get-document-name";
-import getEditorMDTemplate from "@/utils/rich-text-editor/sample-resume-md";
-import debounce from "lodash.debounce";
 
 export default function DocFilePage({ params }) {
-  const { socket, isSaving, setIsSaving, documentValue, setDocumentValue } =
-    useSocket();
+  const {
+    socket,
+    isSaving,
+    setIsSaving,
+    isConnected,
+    documentValue,
+    setDocumentValue,
+  } = useSocket();
 
   const [starred, setStarred] = useState(false);
   const [document, setDocument] = useState(null);
   const [saveValue, setSaveValue] = useState(documentValue);
+  const [docName, setDocName] = useState("");
 
+  // Utility functions
+  const handleDocNameChange = (e) => {
+    e.preventDefault();
+    setDocName(e.target.value);
+  };
+
+  const handleDocNameSave = (e) => {
+    e.preventDefault();
+    if (!e.target.value || e.target.value.toString().length < 1) {
+      setDocName(getDocumentName(params, document));
+      return;
+    }
+    setIsSaving(true);
+    socket?.emit("save-changes", {
+      docId: params.id.toString(),
+      changes: {
+        name: e.target.value,
+      },
+    });
+  };
+
+  // react hook definitions
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const dbnce = useCallback(
     debounce((value) => {
-      console.log("Socket fired!", value);
       setSaveValue(value);
     }, 1000),
     []
   );
 
-  useEffect(() => {
-    const fetchDocById = async (docId) => {
-      const response = await getDocById(docId);
-      if (response.data) {
-        setDocument(response.data.document);
-        setDocumentValue(response.data.document.content);
-      }
-    };
-    const docId = params.id.toString();
-    if (docId !== NEW && docId !== RESUME) {
-      fetchDocById(docId);
-    } else {
-      setDocumentValue(getEditorMDTemplate(params));
-    }
-  }, []);
-
+  // saves doc changes after a second of inactivity
   useEffect(() => {
     setIsSaving(true);
     socket?.emit("save-changes", {
-      content: saveValue.toString(),
       docId: params.id.toString(),
+      changes: {
+        content: saveValue,
+      },
     });
   }, [saveValue]);
 
+  // stars doc
+  useEffect(() => {
+    setIsSaving(true);
+    socket?.emit("save-changes", {
+      docId: params.id.toString(),
+      changes: {
+        isStarred: starred,
+      },
+    });
+  }, [starred]);
+
+  // fetch document details based on params ID
+  useEffect(() => {
+    const fetchDocById = async (docId) => {
+      setIsSaving(true);
+      const response = await getDocById(docId);
+      if (response.data) {
+        setIsSaving(false);
+        setDocument(response.data.document);
+        setDocName(response.data.document.name);
+        setStarred(response.data.document.isStarred);
+        setDocumentValue(response.data.document.content);
+      }
+    };
+    fetchDocById(params.id.toString());
+  }, []);
+
+  // setting document value changes from another user in real time
+  useEffect(() => {
+    socket?.on("output-change", (content) => {
+      setDocumentValue(content);
+    });
+  }, [socket]);
+
+  // joining doc room on socket connection
+  useEffect(() => {
+    if (isConnected) socket?.emit("join-doc", params.id.toString());
+  }, [isConnected]);
+
   return (
     <>
-      <Nav>
+      <Nav share>
         <NavLogo>
-          <span className="text-xl text-gray-600 ml-2 w-40 whitespace-nowrap overflow-hidden text-ellipsis">
-            {getDocumentName(params, document)}
-          </span>
+          <input
+            value={docName}
+            onBlur={handleDocNameSave}
+            onChange={handleDocNameChange}
+            className="text-xl text-gray-600 ml-2 w-40 whitespace-nowrap overflow-hidden text-ellipsis outline-none"
+          />
           <DocStatusBtns
             className="ml-4"
             starred={starred}
             setStarred={setStarred}
-            docDetails={{ ...document }}
           />
-          {isSaving ? "Saving..." : ""}
+          <span className="ml-2 text-xs">{isSaving ? "Saving..." : ""}</span>
         </NavLogo>
       </Nav>
       <div className="nav-holder h-14 w-full"></div>
       <section className="doc-editor">
         <QuillWrapper
-          onChange={(value) => {
-            setDocumentValue(value);
-            socket?.emit("input-change", {
-              content: value.toString(),
-              docId: params.id.toString(),
-            });
-            dbnce(value);
-          }}
           theme="snow"
           modules={modules}
           formats={formats}
           value={documentValue}
+          onChange={(value) => {
+            // socket?.emit("input-change", value.toString());
+            setDocumentValue(value);
+            dbnce(value);
+          }}
         />
       </section>
     </>

@@ -26,17 +26,11 @@ export const SocketProvider = ({ children }) => {
     });
 
     socketInstance.on("connect", () => {
-      console.log("Socket connected!");
       setIsConnected(true);
     });
 
-    socketInstance.on("output-change", (inputChanges) => {
-      console.log("At client side", inputChanges);
-    });
-
-    socketInstance.on("saved-changes", (status) => {
-      console.log("At client side status", status);
-      setIsSaving(false);
+    socketInstance.on("saved-changes", (val) => {
+      Boolean(val) ? setIsSaving(false) : setIsSaving(true);
     });
 
     socketInstance.on("disconnect", () => {

@@ -9,7 +9,7 @@ export default function NavSearch() {
   return (
     <div
       className={`nav-search bg-grey-6 p-1 flex items-center w-4/12 h-11 rounded-md ${
-        shadow ? "search-shadow" : ""
+        shadow ? "shadow-search" : ""
       }`}
     >
       <button
