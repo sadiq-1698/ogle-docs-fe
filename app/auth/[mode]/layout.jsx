@@ -38,6 +38,12 @@ export default function AuthLayout({ params }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [fieldsState, setFieldsState] = useState(currentFieldState);
 
+  const storeUserData = (userData) => {
+    localStorage.setItem("name", userData.name);
+    localStorage.setItem("userId", userData._id);
+    localStorage.setItem("username", userData.username);
+  };
+
   const handleRegister = async () => {
     if (registerInvalid(fieldsState)) {
       setErrorState(true);
@@ -56,7 +62,7 @@ export default function AuthLayout({ params }) {
     }
     const response = await userLogin(fieldsState);
     if (response.data?._id) {
-      localStorage.setItem("userId", response.data?._id);
+      storeUserData(response.data);
       router.replace(nextUrl ? nextUrl : "/");
     } else {
       setErrorState(true);

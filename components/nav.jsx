@@ -2,16 +2,18 @@
 
 import "../styles/globals.css";
 import Lock from "@/elements/lock";
-import { useRouter } from "next/navigation";
-import { userLogout } from "@/utils/api/auth/logout";
+import { useState, useEffect } from "react";
+import ProfileContainer from "./auth/profile-container";
+import getProfileLetter from "@/utils/auth/get-profile-letter";
 
 export default function Nav({ children, share }) {
-  const router = useRouter();
+  const [showProfile, setShowProfile] = useState(false);
+  const [profileLtter, setProfileLetter] = useState("");
 
-  const handleLogout = async () => {
-    await userLogout();
-    router.replace("/auth/login");
-  };
+  useEffect(() => {
+    const profLetter = getProfileLetter();
+    setProfileLetter(profLetter);
+  }, []);
 
   return (
     <nav className="fixed top-0 w-full bg-white shadow-md h-14 p-2 flex items-center justify-between z-50">
@@ -26,11 +28,21 @@ export default function Nav({ children, share }) {
           <></>
         )}
 
-        <div
-          className="nav-profile cursor-pointer"
-          onClick={() => handleLogout()}
-        >
-          <div className="h-9 w-9 bg-red-800 rounded-full mx-3"></div>
+        <div className="nav-profile cursor-pointer relative">
+          <div
+            onClick={() => setShowProfile((s) => !s)}
+            className="h-9 w-9 bg-red-800 rounded-full mx-3 flex items-center justify-center"
+          >
+            <span className="text-white font-bold text-sm">{profileLtter}</span>
+          </div>
+          {showProfile ? (
+            <ProfileContainer
+              profileLtter={profileLtter}
+              setShowProfile={setShowProfile}
+            />
+          ) : (
+            <></>
+          )}
         </div>
       </div>
     </nav>

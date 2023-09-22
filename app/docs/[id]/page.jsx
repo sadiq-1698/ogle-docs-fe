@@ -98,6 +98,7 @@ export default function DocFilePage({ params }) {
   // setting document value changes from another user in real time
   useEffect(() => {
     socket?.on("output-change", (content) => {
+      console.log("Jinglis came here");
       setDocumentValue(content);
     });
   }, [socket]);
@@ -132,8 +133,8 @@ export default function DocFilePage({ params }) {
           modules={modules}
           formats={formats}
           value={documentValue}
-          onChange={(value) => {
-            // socket?.emit("input-change", value.toString());
+          onChange={(value, delta) => {
+            socket?.emit("input-change", value.toString());
             setDocumentValue(value);
             dbnce(value);
           }}

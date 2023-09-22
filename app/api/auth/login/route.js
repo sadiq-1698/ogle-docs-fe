@@ -23,7 +23,7 @@ export async function POST(request) {
 
     const { username, password } = jsonBody;
 
-    const allowedUserInfo = ["_id", "name", "usernme"];
+    const allowedUserInfo = ["_id", "name", "username"];
 
     const userExists = await userModel.findOne({ username: username });
 

@@ -1,8 +1,7 @@
-"use client";
-
 import Head from "next/head";
 import dynamic from "next/dynamic";
 import "../../../styles/globals.css";
+// import { cookies } from "next/headers";
 import "react-quill/dist/quill.snow.css";
 import { SocketProvider } from "@/providers/socket-provider";
 
