@@ -1,14 +1,14 @@
 import Head from "next/head";
 import dynamic from "next/dynamic";
 import "../../../styles/globals.css";
-// import { cookies } from "next/headers";
 import "react-quill/dist/quill.snow.css";
 import { SocketProvider } from "@/providers/socket-provider";
 
 export const QuillWrapper = dynamic(
   async () => {
     const { default: RQ } = await import("react-quill");
-    return ({ ...props }) => <RQ {...props} />;
+
+    return ({ forwardedRef, ...props }) => <RQ ref={forwardedRef} {...props} />;
   },
   {
     ssr: false,

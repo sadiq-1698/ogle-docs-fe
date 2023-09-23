@@ -9,7 +9,7 @@ import modules from "@/utils/rich-text-editor/modules";
 import { useSocket } from "@/providers/socket-provider";
 import { getDocById } from "@/utils/api/docs/get-by-id";
 import DocStatusBtns from "@/components/doc-status-btns";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import getDocumentName from "@/utils/rich-text-editor/get-document-name";
 
 export default function DocFilePage({ params }) {
@@ -22,10 +22,13 @@ export default function DocFilePage({ params }) {
     setDocumentValue,
   } = useSocket();
 
+  const quillRef = useRef();
+
+  const [docName, setDocName] = useState("");
   const [starred, setStarred] = useState(false);
   const [document, setDocument] = useState(null);
+  const [defaultValue, setDefaultValue] = useState(null);
   const [saveValue, setSaveValue] = useState(documentValue);
-  const [docName, setDocName] = useState("");
 
   // Utility functions
   const handleDocNameChange = (e) => {
@@ -89,6 +92,7 @@ export default function DocFilePage({ params }) {
         setDocument(response.data.document);
         setDocName(response.data.document.name);
         setStarred(response.data.document.isStarred);
+        setDefaultValue(response.data.document.content);
         setDocumentValue(response.data.document.content);
       }
     };
@@ -98,7 +102,6 @@ export default function DocFilePage({ params }) {
   // setting document value changes from another user in real time
   useEffect(() => {
     socket?.on("output-change", (content) => {
-      console.log("Jinglis came here");
       setDocumentValue(content);
     });
   }, [socket]);
@@ -107,6 +110,8 @@ export default function DocFilePage({ params }) {
   useEffect(() => {
     if (isConnected) socket?.emit("join-doc", params.id.toString());
   }, [isConnected]);
+
+  console.log("quillRef", quillRef);
 
   return (
     <>
@@ -128,17 +133,26 @@ export default function DocFilePage({ params }) {
       </Nav>
       <div className="nav-holder h-14 w-full"></div>
       <section className="doc-editor">
-        <QuillWrapper
-          theme="snow"
-          modules={modules}
-          formats={formats}
-          value={documentValue}
-          onChange={(value, delta) => {
-            socket?.emit("input-change", value.toString());
-            setDocumentValue(value);
-            dbnce(value);
-          }}
-        />
+        {defaultValue !== null && (
+          <QuillWrapper
+            theme="snow"
+            modules={modules}
+            formats={formats}
+            forwardedRef={quillRef}
+            defaultValue={defaultValue}
+            // value={documentValue}
+            onChange={(value, delta, source) => {
+              if (source === "user") {
+                console.log("value -", value);
+                console.log("delta -", delta);
+                console.log("source -", source);
+                socket?.emit("input-change", value.toString());
+                setDocumentValue(value);
+                dbnce(value);
+              }
+            }}
+          />
+        )}
       </section>
     </>
   );
