@@ -3,23 +3,26 @@
  * See https://quilljs.com/docs/formats/
  */
 const formats = [
-  "header",
-  "font",
-  "size",
   "bold",
   "italic",
   "underline",
   "strike",
   "blockquote",
+  "code-block",
+  "image",
+  "link",
   "list",
   "bullet",
+  "script",
   "indent",
-  "link",
-  "image",
-  "video",
+  "align",
+  "size",
+  "header",
+  "font",
   "color",
   "background",
-  "code-block"
+  "direction",
+  "clean",
 ];
 
 export default formats;
