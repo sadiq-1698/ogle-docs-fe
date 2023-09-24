@@ -1,8 +1,9 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import Nav from "@/components/nav";
 import debounce from "lodash.debounce";
-import { QuillWrapper } from "./layout";
+// import { QuillWrapper } from "./layout";
 import NavLogo from "@/components/nav-logo";
 import formats from "@/utils/rich-text-editor/format";
 import modules from "@/utils/rich-text-editor/modules";
@@ -11,6 +12,19 @@ import { getDocById } from "@/utils/api/docs/get-by-id";
 import DocStatusBtns from "@/components/doc-status-btns";
 import { useCallback, useEffect, useRef, useState } from "react";
 import getDocumentName from "@/utils/rich-text-editor/get-document-name";
+
+const QuillWrapper = dynamic(
+  async () => {
+    const { default: RQ } = await import("react-quill");
+
+    return function myQuillComp({ forwardedRef, ...props }) {
+      return <RQ ref={forwardedRef} {...props} />;
+    };
+  },
+  {
+    ssr: false,
+  }
+);
 
 export default function DocFilePage({ params }) {
   const { socket, isConnected } = useSocket();
