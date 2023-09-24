@@ -14,9 +14,7 @@ export const useSocket = () => {
 
 export const SocketProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
-  const [isSaving, setIsSaving] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
-  const [documentValue, setDocumentValue] = useState("");
 
   useEffect(() => {
     // TODO : change the path before deploying
@@ -27,10 +25,6 @@ export const SocketProvider = ({ children }) => {
 
     socketInstance.on("connect", () => {
       setIsConnected(true);
-    });
-
-    socketInstance.on("saved-changes", (val) => {
-      Boolean(val) ? setIsSaving(false) : setIsSaving(true);
     });
 
     socketInstance.on("disconnect", () => {
@@ -45,16 +39,7 @@ export const SocketProvider = ({ children }) => {
   }, []);
 
   return (
-    <SocketContext.Provider
-      value={{
-        socket,
-        isSaving,
-        setIsSaving,
-        isConnected,
-        documentValue,
-        setDocumentValue,
-      }}
-    >
+    <SocketContext.Provider value={{ socket, isConnected }}>
       {children}
     </SocketContext.Provider>
   );

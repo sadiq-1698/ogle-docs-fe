@@ -40,7 +40,7 @@ const ioHandler = (req, res) => {
         socket.join(roomId);
 
         socket.on("input-change", (doc) => {
-          io.to(roomId).emit("output-change", doc);
+          socket.to(roomId).emit("output-change", doc);
         });
       });
     });

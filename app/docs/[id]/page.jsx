@@ -13,22 +13,15 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import getDocumentName from "@/utils/rich-text-editor/get-document-name";
 
 export default function DocFilePage({ params }) {
-  const {
-    socket,
-    isSaving,
-    setIsSaving,
-    isConnected,
-    documentValue,
-    setDocumentValue,
-  } = useSocket();
+  const { socket, isConnected } = useSocket();
 
   const quillRef = useRef();
 
   const [docName, setDocName] = useState("");
   const [starred, setStarred] = useState(false);
   const [document, setDocument] = useState(null);
-  const [defaultValue, setDefaultValue] = useState(null);
-  const [saveValue, setSaveValue] = useState(documentValue);
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveValue, setSaveValue] = useState(null);
 
   // Utility functions
   const handleDocNameChange = (e) => {
@@ -71,7 +64,7 @@ export default function DocFilePage({ params }) {
     });
   }, [saveValue]);
 
-  // stars doc
+  // marks the doc as starred
   useEffect(() => {
     setIsSaving(true);
     socket?.emit("save-changes", {
@@ -81,6 +74,14 @@ export default function DocFilePage({ params }) {
       },
     });
   }, [starred]);
+
+  useEffect(() => {
+    if (socket) {
+      socket.on("saved-changes", () => {
+        setIsSaving(false);
+      });
+    }
+  }, [socket]);
 
   // fetch document details based on params ID
   useEffect(() => {
@@ -92,26 +93,68 @@ export default function DocFilePage({ params }) {
         setDocument(response.data.document);
         setDocName(response.data.document.name);
         setStarred(response.data.document.isStarred);
-        setDefaultValue(response.data.document.content);
-        setDocumentValue(response.data.document.content);
       }
     };
     fetchDocById(params.id.toString());
   }, []);
 
+  // set initial content if content exists
+  useEffect(() => {
+    if (quillRef.current && document?.content) {
+      let initialContent;
+      const content = document.content;
+      const editorInstance = quillRef.current.getEditor();
+      try {
+        // if in quill delta format
+        initialContent = JSON.parse(content);
+      } catch (error) {
+        // if in html format
+        initialContent = editorInstance.clipboard.convert(content);
+      } finally {
+        editorInstance.setContents(initialContent);
+      }
+    }
+  }, [quillRef.current, document?.content]);
+
   // setting document value changes from another user in real time
   useEffect(() => {
-    socket?.on("output-change", (content) => {
-      setDocumentValue(content);
-    });
+    if (socket) {
+      const handler = (delta) => {
+        const editorInstance = quillRef.current?.getEditor();
+        editorInstance?.updateContents(delta);
+      };
+
+      socket?.on("output-change", handler);
+
+      return () => {
+        socket?.off("output-change", handler);
+      };
+    }
   }, [socket]);
+
+  // sending client changes to server
+  useEffect(() => {
+    if (quillRef.current && socket) {
+      const editorInstance = quillRef.current?.getEditor();
+
+      const handler = (delta, _, source) => {
+        if (source !== "user") return;
+        socket?.emit("input-change", delta);
+        dbnce(JSON.stringify(editorInstance.getContents()));
+      };
+
+      editorInstance?.on("text-change", handler);
+
+      return () => {
+        editorInstance?.off("text-change", handler);
+      };
+    }
+  }, [socket, quillRef.current]);
 
   // joining doc room on socket connection
   useEffect(() => {
     if (isConnected) socket?.emit("join-doc", params.id.toString());
   }, [isConnected]);
-
-  console.log("quillRef", quillRef);
 
   return (
     <>
@@ -133,26 +176,12 @@ export default function DocFilePage({ params }) {
       </Nav>
       <div className="nav-holder h-14 w-full"></div>
       <section className="doc-editor">
-        {defaultValue !== null && (
-          <QuillWrapper
-            theme="snow"
-            modules={modules}
-            formats={formats}
-            forwardedRef={quillRef}
-            defaultValue={defaultValue}
-            // value={documentValue}
-            onChange={(value, delta, source) => {
-              if (source === "user") {
-                console.log("value -", value);
-                console.log("delta -", delta);
-                console.log("source -", source);
-                socket?.emit("input-change", value.toString());
-                setDocumentValue(value);
-                dbnce(value);
-              }
-            }}
-          />
-        )}
+        <QuillWrapper
+          theme="snow"
+          modules={modules}
+          formats={formats}
+          forwardedRef={quillRef}
+        />
       </section>
     </>
   );
