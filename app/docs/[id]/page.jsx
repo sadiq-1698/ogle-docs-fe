@@ -3,7 +3,6 @@
 import dynamic from "next/dynamic";
 import Nav from "@/components/nav";
 import debounce from "lodash.debounce";
-// import { QuillWrapper } from "./layout";
 import NavLogo from "@/components/nav-logo";
 import formats from "@/utils/rich-text-editor/format";
 import modules from "@/utils/rich-text-editor/modules";
