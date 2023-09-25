@@ -22,6 +22,11 @@ code {
     @apply w-full;
 }
 
+.smooth-scale:hover {
+    transform: scale(1.0001);
+    transition: all .05s ease-in-out;
+}
+
 .doc-editor .quill .ql-toolbar.ql-snow {
     @apply flex justify-center w-11/12 mx-auto bg-grey-6 rounded-3xl border-none p-0;
 }

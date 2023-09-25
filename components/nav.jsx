@@ -9,18 +9,23 @@ import useModal from "@/elements/hooks/useModal";
 import ProfileContainer from "./auth/profile-container";
 import getProfileLetter from "@/utils/auth/get-profile-letter";
 
-export default function Nav({ children, share }) {
-  const { isOpen, component, modalStyle, toggleModal, openModal, closeModal } =
-    useModal();
+export default function Nav({ children, share, document }) {
+  const modalUtils = useModal();
+  const { isOpen, component, toggleModal } = modalUtils;
 
   const [showProfile, setShowProfile] = useState(false);
   const [profileLtter, setProfileLetter] = useState("");
 
+  const shareProps = {
+    ...modalUtils,
+    ...document,
+  };
+
   const handleShareClick = () => {
     toggleModal({
-      component: <ShareDocument />,
       modalStyle: {},
       shouldOpenModal: true,
+      component: <ShareDocument {...shareProps} />,
     });
   };
 

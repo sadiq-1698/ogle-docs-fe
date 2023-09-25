@@ -36,6 +36,12 @@ export default function DocFilePage({ params }) {
   const [isSaving, setIsSaving] = useState(false);
   const [saveValue, setSaveValue] = useState(null);
 
+  // Utility constants
+  const navProps = {
+    share: true,
+    document: document,
+  };
+
   // Utility functions
   const handleDocNameChange = (e) => {
     e.preventDefault();
@@ -171,7 +177,7 @@ export default function DocFilePage({ params }) {
 
   return (
     <>
-      <Nav share>
+      <Nav {...navProps}>
         <NavLogo>
           <input
             value={docName}
