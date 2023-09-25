@@ -18,6 +18,7 @@ module.exports = {
       },
       colors: {
         brand: "#f1f3f4",
+        overlay: "rgba(0, 0, 0, 0.25)",
         black: {
           default: "#000000",
           1: "#484B4E",
