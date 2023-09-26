@@ -4,9 +4,9 @@ import "../styles/globals.css";
 import Modal from "./modal/modal";
 import Lock from "@/elements/lock";
 import { useState, useEffect } from "react";
-import ShareDocument from "./modal/share-doc";
 import useModal from "@/elements/hooks/useModal";
 import ProfileContainer from "./auth/profile-container";
+import ShareDocument from "./modal/share-doc/share-doc";
 import getProfileLetter from "@/utils/auth/get-profile-letter";
 
 export default function Nav({ children, share, document }) {
@@ -14,11 +14,12 @@ export default function Nav({ children, share, document }) {
   const { isOpen, component, toggleModal } = modalUtils;
 
   const [showProfile, setShowProfile] = useState(false);
-  const [profileLtter, setProfileLetter] = useState("");
+  const [profileLetter, setProfileLetter] = useState("");
 
   const shareProps = {
-    ...modalUtils,
     ...document,
+    profileLetter,
+    ...modalUtils,
   };
 
   const handleShareClick = () => {
@@ -43,7 +44,7 @@ export default function Nav({ children, share, document }) {
             onClick={() => handleShareClick()}
             className="flex items-center bg-blue-2 rounded-3xl pl-2.5 pr-6 py-1 hover:shadow-search"
           >
-            <Lock />
+            <Lock transform="translate(10 6)" />
             <span className="ml-1.5 font-semibold text-sm">Share</span>
           </button>
         ) : (
@@ -55,11 +56,13 @@ export default function Nav({ children, share, document }) {
             onClick={() => setShowProfile((s) => !s)}
             className="h-9 w-9 bg-red-800 rounded-full mx-3 flex items-center justify-center"
           >
-            <span className="text-white font-bold text-sm">{profileLtter}</span>
+            <span className="text-white font-bold text-sm">
+              {profileLetter}
+            </span>
           </div>
           {showProfile ? (
             <ProfileContainer
-              profileLtter={profileLtter}
+              profileLetter={profileLetter}
               setShowProfile={setShowProfile}
             />
           ) : (

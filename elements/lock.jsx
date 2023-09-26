@@ -1,6 +1,6 @@
 import "../styles/globals.css";
 
-export default function Lock({ transform = "translate(10 6)" }) {
+export default function Lock({ transform = "translate(7 7)" }) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

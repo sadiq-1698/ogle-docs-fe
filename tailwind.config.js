@@ -26,7 +26,10 @@ module.exports = {
           1: "#484B4E",
           2: "#2F4858",
           3: "#2C2926",
-          4: 'rgba(0, 0, 0, 0.87)'
+          4: "rgba(0, 0, 0, 0.87)",
+        },
+        green: {
+          1: "#c4eed0",
         },
         grey: {
           default: "#grey",
@@ -38,7 +41,8 @@ module.exports = {
           6: "#f1f3f4",
           7: "#e9eef6",
           8: "#e8ebee",
-          9: '#444746'
+          9: "#444746",
+          10: "rgb(241,243,244)",
         },
         blue: {
           default: "blue",

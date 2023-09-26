@@ -1,6 +1,29 @@
+import Lock from "@/elements/lock";
+import GeneralIcon from "@/elements/general";
+
 export const NEW = "new";
 export const BLANK = "blank";
 export const RESUME = "resume";
+
+export const GENERAL = "General";
+export const RESTRICTED = "Restricted";
+
+export const ACCESS_TYPES = {
+  [RESTRICTED]: {
+    key: RESTRICTED,
+    text: RESTRICTED,
+    component: <Lock />,
+    className: 'bg-grey-10',
+    description: "Only people with access can open with the link",
+  },
+  [GENERAL]: {
+    key: GENERAL,
+    text: "Anyone with the link",
+    component: <GeneralIcon />,
+    className: 'bg-green-1',
+    description: "Anyone on the internet with the link can view",
+  },
+};
 
 export const SAMPLE_RESUME_MD = `<br><br>
 <h1>Resume</h1>

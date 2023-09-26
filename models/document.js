@@ -21,11 +21,17 @@ const DocumentSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    generalAccess: {
+    accessType: {
       type: String,
       default: RESTRICTED,
     },
-    peopleWithAccess: [
+    editors: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "users",
+      },
+    ],
+    viewers: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "users",
