@@ -9,12 +9,12 @@ export async function POST(request) {
     if (!checkAuth.auth) return checkAuth.response;
 
     const jsonBody = await request.json();
-    const userId = checkAuth.response.payload.id;
+    const ownerId = checkAuth.response.payload.id;
     const { name, content, isStarred, isTemplate } = jsonBody;
 
     const docObj = {
       name,
-      userId,
+      ownerId,
       content,
       ...(isStarred && { isStarred: isStarred }),
       ...(isTemplate && { isTemplate: isTemplate }),
@@ -41,7 +41,7 @@ export async function GET(request) {
     const userId = checkAuth.response.payload.id;
 
     await connectToDatabase();
-    const documentsList = await documentModel.find({ userId: userId });
+    const documentsList = await documentModel.find({ ownerId: userId });
 
     if (!documentsList) {
       return responseTemplate(404, {

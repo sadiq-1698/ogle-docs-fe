@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 
+const RESTRICTED = "Restricted";
+
 const DocumentSchema = new mongoose.Schema(
   {
     name: {
@@ -19,7 +21,17 @@ const DocumentSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    userId: {
+    generalAccess: {
+      type: String,
+      default: RESTRICTED,
+    },
+    peopleWithAccess: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "users",
+      },
+    ],
+    ownerId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "users",
     },

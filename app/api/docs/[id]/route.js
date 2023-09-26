@@ -50,7 +50,7 @@ export async function DELETE(request, { params }) {
         if (err) {
           return responseTemplate(404, err);
         } else {
-          if (doc.userId !== userId) {
+          if (doc.ownerId !== userId) {
             await session.abortTransaction();
             return responseTemplate(403, {
               message: "Unauthorized!",
