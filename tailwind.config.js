@@ -15,6 +15,8 @@ module.exports = {
       boxShadow: {
         search:
           "0 1px 1px 0 rgb(65 69 73 / 30%), 0 1px 3px 1px rgb(65 69 73 / 15%)",
+        dropdown:
+          "0 3px 5px -1px rgb(0 0 0 / 20%), 0 6px 10px 0 rgb(0 0 0 / 14%), 0 1px 18px 0 rgb(0 0 0 / 12%)",
       },
       colors: {
         brand: "#f1f3f4",
@@ -24,6 +26,7 @@ module.exports = {
           1: "#484B4E",
           2: "#2F4858",
           3: "#2C2926",
+          4: 'rgba(0, 0, 0, 0.87)'
         },
         grey: {
           default: "#grey",
@@ -34,7 +37,8 @@ module.exports = {
           5: "#C3C7CB",
           6: "#f1f3f4",
           7: "#e9eef6",
-          8: "#e8ebee"
+          8: "#e8ebee",
+          9: '#444746'
         },
         blue: {
           default: "blue",
