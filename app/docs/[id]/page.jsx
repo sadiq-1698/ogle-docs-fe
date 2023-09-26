@@ -11,6 +11,7 @@ import { getDocById } from "@/utils/api/docs/get-by-id";
 import DocStatusBtns from "@/components/doc-status-btns";
 import { useCallback, useEffect, useRef, useState } from "react";
 import getDocumentName from "@/utils/rich-text-editor/get-document-name";
+import { deleteAllDocuments } from "@/utils/api/docs/delete-all";
 
 const QuillWrapper = dynamic(
   async () => {
@@ -178,6 +179,7 @@ export default function DocFilePage({ params }) {
   return (
     <>
       <Nav {...navProps}>
+        <button onClick={async () => await deleteAllDocuments()}>Simply</button>
         <NavLogo>
           <input
             value={docName}
