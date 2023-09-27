@@ -2,7 +2,9 @@ import Spinner from "@/elements/spinner";
 import { useEffect, useState } from "react";
 import { getUsersWithAccess } from "@/utils/api/users/get-with-access";
 
-const PeopleWithAccess = ({ profileLetter, docId }) => {
+const COLORS = ["bg-purple-800", "bg-red-800", "bg-green-800", "bg-gray-800"];
+
+const PeopleWithAccess = ({ docId }) => {
   const [loading, setLoading] = useState(false);
   const [usersList, setUsersList] = useState(null);
 
@@ -32,25 +34,28 @@ const PeopleWithAccess = ({ profileLetter, docId }) => {
 
       {usersList &&
         usersList.length > 0 &&
-        usersList.map((user) => {
+        usersList.map((user, index) => {
+          const bgClass = COLORS[index % COLORS.length];
           return (
             <div className="bg-white hover:bg-grey-6 py-2 mb-4" key={user._id}>
               <div className="px-5">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
-                    <div className="h-8 w-8 bg-red-800 rounded-full flex items-center justify-center mr-2">
+                    <div
+                      className={`h-8 w-8 ${bgClass} rounded-full flex items-center justify-center mr-2`}
+                    >
                       <span className="text-white font-bold text-sm">
-                        {profileLetter}
+                        {user.name.toString().split(" ")[0].charAt(0)}
                       </span>
                     </div>
                     <div className="flex flex-col">
                       <div className="flex items-center">
                         <span className="text-sm mr-1.5 font-semibold">
-                          {localStorage.getItem("name")}
+                          {user.name.toString()}
                         </span>
                       </div>
                       <span className="text-xs text-grey-9">
-                        {localStorage.getItem("username")}
+                        {user.username.toString()}
                       </span>
                     </div>
                   </div>

@@ -1,10 +1,8 @@
 import debounce from "lodash.debounce";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { getSearchUsers } from "@/utils/api/users/get-search-users";
 
-const SearchUsers = () => {
-  const inputRef = useRef();
-
+const SearchUsers = ({ setNotifyScreen, setUsersToNotify }) => {
   const [search, setSearch] = useState(null);
   const [searchList, setSearchList] = useState(null);
   const [searchValue, setSearchValue] = useState(null);
@@ -32,8 +30,10 @@ const SearchUsers = () => {
     setSearchList(null);
   };
 
-  const handleSelectUser = () => {
+  const handleSelectUser = (user) => {
     resetSearchStates();
+    setUsersToNotify([user]);
+    setNotifyScreen(true);
   };
 
   // use effect definitions
@@ -54,7 +54,6 @@ const SearchUsers = () => {
     <div className="w-full mb-4 px-5">
       <div className="relative">
         <input
-          ref={inputRef}
           value={searchValue}
           onChange={handleSearch}
           placeholder="Add people"
@@ -66,7 +65,7 @@ const SearchUsers = () => {
             searchList.map((user) => {
               return (
                 <button
-                  onClick={() => handleSelectUser()}
+                  onClick={() => handleSelectUser(user)}
                   className="py-2 px-3 flex items-center w-full bg-grey-7 hover:bg-gray-200"
                 >
                   <div className="h-10 w-10 bg-red-800 rounded-full flex items-center justify-center mr-2">

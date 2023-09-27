@@ -179,7 +179,7 @@ export default function DocFilePage({ params }) {
   return (
     <>
       <Nav {...navProps}>
-        <button onClick={async () => await deleteAllDocuments()}>Simply</button>
+        {/* <button onClick={async () => await deleteAllDocuments()}>Simply</button> */}
         <NavLogo>
           <input
             value={docName}

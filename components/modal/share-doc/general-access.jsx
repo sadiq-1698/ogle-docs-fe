@@ -2,12 +2,11 @@ import { useState } from "react";
 import { ACCESS_TYPES } from "@/enums";
 import CaretDown from "@/elements/caret-down";
 
-const GeneralAccess = ({ accessType }) => {
+const GeneralAccess = ({ currAccessType, setCurrAccessType }) => {
   const [typeDropdown, showTypeDropdown] = useState(false);
-  const [currAccessType, setCurrAccessType] = useState(accessType);
 
   const accessTypeDetails = ACCESS_TYPES[currAccessType];
-  const iconBgClass = accessTypeDetails.className;
+  const iconBgClass = ACCESS_TYPES[currAccessType].className;
 
   const handleSelectAccessType = (key) => {
     setCurrAccessType(key);
