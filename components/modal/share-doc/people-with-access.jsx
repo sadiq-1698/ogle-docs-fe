@@ -1,5 +1,3 @@
-"use client";
-
 const PeopleWithAccess = ({ profileLetter }) => {
   return (
     <>
@@ -17,7 +15,7 @@ const PeopleWithAccess = ({ profileLetter }) => {
               <div className="flex flex-col">
                 <div className="flex items-center">
                   <span className="text-sm mr-1.5 font-semibold">
-                    {localStorage.getItem("name").toString().split(" ")[0]}
+                    {localStorage.getItem("name")}
                   </span>
                 </div>
                 <span className="text-xs text-grey-9">

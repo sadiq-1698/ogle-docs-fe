@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import { ACCESS_TYPES } from "@/enums";
 import CaretDown from "@/elements/caret-down";
@@ -9,6 +7,7 @@ const GeneralAccess = ({ accessType }) => {
   const [currAccessType, setCurrAccessType] = useState(accessType);
 
   const accessTypeDetails = ACCESS_TYPES[currAccessType];
+  const iconBgClass = accessTypeDetails.className;
 
   const handleSelectAccessType = (key) => {
     setCurrAccessType(key);
@@ -22,9 +21,7 @@ const GeneralAccess = ({ accessType }) => {
       <div className="bg-white hover:bg-grey-6 py-2">
         <div className="px-5">
           <div className="flex items-center ">
-            <div
-              className={`h-8 w-8 rounded-full ${accessTypeDetails.className} mr-2`}
-            >
+            <div className={`h-8 w-8 rounded-full ${iconBgClass} mr-2`}>
               {accessTypeDetails.component}
             </div>
 

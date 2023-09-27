@@ -1,4 +1,5 @@
 import Close from "@/elements/close";
+import SearchUsers from "./search-users";
 import GeneralAccess from "./general-access";
 import PeopleWithAccess from "./people-with-access";
 
@@ -18,12 +19,7 @@ const ShareDocument = (props) => {
         </button>
       </div>
 
-      <div className="w-full mb-4 px-5">
-        <input
-          placeholder="Add people"
-          className="w-full outline-none border-2 border-solid border-gray-400 focus:border-blue-700 p-3 px-4 rounded-md"
-        />
-      </div>
+      <SearchUsers />
 
       <PeopleWithAccess profileLetter={profileLetter} />
 
