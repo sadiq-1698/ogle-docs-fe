@@ -1,8 +1,9 @@
 import usersModel from "@/models/user";
 import connectToDatabase from "@/lib/db-connect";
 import responseTemplate from "@/utils/api/response-template";
+import authCheck from "@/utils/api/auth/check-auth";
 
-const getUsersListFromSearchString = async (search) => {
+const getUsersListFromSearchString = async (search, userId) => {
   try {
     const regex = new RegExp(search.toString(), "i");
 
@@ -17,7 +18,7 @@ const getUsersListFromSearchString = async (search) => {
     }
 
     return responseTemplate(200, {
-      usersList,
+      usersList: usersList.filter((el) => el._id.toString() !== userId),
       message: "Users fetched successfully",
     });
   } catch (error) {
@@ -52,6 +53,11 @@ const getUsersListWithAccessToDocs = async () => {
 
 export async function GET(request) {
   try {
+    const checkAuth = await authCheck(request);
+    if (!checkAuth.auth) return checkAuth.response;
+
+    const userId = checkAuth.response.payload.id;
+
     const url = new URL(request.url);
 
     const docId = url.searchParams.get("docId");
@@ -66,7 +72,7 @@ export async function GET(request) {
     }
 
     if (search) {
-      response = await getUsersListFromSearchString(search);
+      response = await getUsersListFromSearchString(search, userId);
       return response;
     }
   } catch (error) {
