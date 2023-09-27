@@ -45,6 +45,10 @@ code {
     min-height: calc(100vh - 155px);
 }
 
+.css-1eqdgzv-MuiPaper-root-MuiSnackbarContent-root {
+    min-width: auto !important;
+}
+
 @keyframes rotating {
     from {
         transform: rotate(0deg);

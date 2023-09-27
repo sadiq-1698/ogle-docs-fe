@@ -1,6 +1,6 @@
+import Spinner from "@/elements/spinner";
 import { useEffect, useState } from "react";
 import { getUsersWithAccess } from "@/utils/api/users/get-with-access";
-import Spinner from "@/elements/spinner";
 
 const PeopleWithAccess = ({ profileLetter, docId }) => {
   const [loading, setLoading] = useState(false);
