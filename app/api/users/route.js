@@ -8,9 +8,11 @@ const getUsersListFromSearchString = async (search, userId) => {
   try {
     const regex = new RegExp(search.toString(), "i");
 
-    const usersList = await usersModel.find({
-      $or: [{ name: { $regex: regex } }, { username: { $regex: regex } }],
-    });
+    const usersList = await usersModel
+      .find({
+        $or: [{ name: { $regex: regex } }, { username: { $regex: regex } }],
+      })
+      .select(["-password"]);
 
     if (!usersList) {
       return responseTemplate(404, {
@@ -43,13 +45,13 @@ const getUsersListWithAccessToDocs = async (docId) => {
       [...document.editors],
     ];
 
-    console.log("userIds", userIds);
-
-    const usersList = await usersModel.find({
-      _id: {
-        $in: userIds,
-      },
-    });
+    const usersList = await usersModel
+      .find({
+        _id: {
+          $in: userIds,
+        },
+      })
+      .select(["-password"]);
 
     if (!usersList) {
       return responseTemplate(404, {
