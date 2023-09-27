@@ -1,7 +1,8 @@
 import usersModel from "@/models/user";
+import documentModel from "@/models/document";
 import connectToDatabase from "@/lib/db-connect";
-import responseTemplate from "@/utils/api/response-template";
 import authCheck from "@/utils/api/auth/check-auth";
+import responseTemplate from "@/utils/api/response-template";
 
 const getUsersListFromSearchString = async (search, userId) => {
   try {
@@ -26,10 +27,24 @@ const getUsersListFromSearchString = async (search, userId) => {
   }
 };
 
-const getUsersListWithAccessToDocs = async () => {
-  const userIds = ["650dd334103dbe308f25dd77", "65116b57508784153da9113d"];
-
+const getUsersListWithAccessToDocs = async (docId) => {
   try {
+    const document = await documentModel.findById(docId);
+
+    if (!document) {
+      return responseTemplate(404, {
+        message: "Document not found!",
+      });
+    }
+
+    const userIds = [
+      document.ownerId.toString(),
+      [...document.viewers],
+      [...document.editors],
+    ];
+
+    console.log("userIds", userIds);
+
     const usersList = await usersModel.find({
       _id: {
         $in: userIds,
@@ -67,7 +82,7 @@ export async function GET(request) {
     let response;
 
     if (docId) {
-      response = await getUsersListWithAccessToDocs();
+      response = await getUsersListWithAccessToDocs(docId);
       return response;
     }
 

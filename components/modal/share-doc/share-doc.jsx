@@ -4,7 +4,13 @@ import GeneralAccess from "./general-access";
 import PeopleWithAccess from "./people-with-access";
 
 const ShareDocument = (props) => {
-  const { closeModal, profileLetter, accessType, name: docName } = props;
+  const {
+    _id: docId,
+    closeModal,
+    accessType,
+    name: docName,
+    profileLetter,
+  } = props;
 
   return (
     <div className="bg-white rounded-lg py-5 w-96 shadow-search">
@@ -21,7 +27,7 @@ const ShareDocument = (props) => {
 
       <SearchUsers />
 
-      <PeopleWithAccess profileLetter={profileLetter} />
+      <PeopleWithAccess profileLetter={profileLetter} docId={docId} />
 
       <GeneralAccess accessType={accessType} />
 
