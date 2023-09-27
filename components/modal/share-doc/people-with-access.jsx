@@ -1,15 +1,19 @@
 import { useEffect, useState } from "react";
 import { getUsersWithAccess } from "@/utils/api/users/get-with-access";
+import Spinner from "@/elements/spinner";
 
 const PeopleWithAccess = ({ profileLetter, docId }) => {
+  const [loading, setLoading] = useState(false);
   const [usersList, setUsersList] = useState(null);
 
   // use effect definitions
   useEffect(() => {
     const fetchUsersWithAccess = async () => {
+      setLoading(true);
       const response = await getUsersWithAccess(docId);
       if (response.data) {
         setUsersList(response.data.usersList);
+        setLoading(false);
       }
     };
 
@@ -20,11 +24,17 @@ const PeopleWithAccess = ({ profileLetter, docId }) => {
     <>
       <span className="font-medium px-5 block">People with access</span>
 
+      {loading && (
+        <div className="w-full flex justify-center items-center py-0.5 mb-4">
+          <Spinner color="blue" size={32} />
+        </div>
+      )}
+
       {usersList &&
         usersList.length > 0 &&
         usersList.map((user) => {
           return (
-            <div className="bg-white hover:bg-grey-6 py-2 mb-4">
+            <div className="bg-white hover:bg-grey-6 py-2 mb-4" key={user._id}>
               <div className="px-5">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
