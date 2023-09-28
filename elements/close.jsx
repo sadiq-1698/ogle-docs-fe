@@ -1,9 +1,9 @@
-const Close = () => {
+const Close = ({ size = 22 }) => {
   return (
     <svg
-      width="22"
-      height="22"
-      viewBox="1 1 22 22"
+      width={`${size}`}
+      height={`${size}`}
+      viewBox={`1 1 22 22`}
       focusable="false"
       class=" NMm5M"
     >

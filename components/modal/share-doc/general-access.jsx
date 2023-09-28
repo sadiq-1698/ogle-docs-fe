@@ -8,6 +8,15 @@ const GeneralAccess = ({ currAccessType, setCurrAccessType }) => {
   const accessTypeDetails = ACCESS_TYPES[currAccessType];
   const iconBgClass = ACCESS_TYPES[currAccessType].className;
 
+  console.log(
+    "ACCESS_TYPES\n",
+    ACCESS_TYPES,
+    "currAccessType\n",
+    currAccessType,
+    "ACCESS_TYPES[currAccessType]",
+    ACCESS_TYPES[currAccessType]
+  );
+
   const handleSelectAccessType = (key) => {
     setCurrAccessType(key);
     showTypeDropdown(false);
@@ -17,7 +26,7 @@ const GeneralAccess = ({ currAccessType, setCurrAccessType }) => {
     <>
       <span className="font-medium px-5">General access</span>
 
-      <div className="bg-white hover:bg-grey-6 py-2">
+      <div className="py-2 hover:bg-grey-10">
         <div className="px-5">
           <div className="flex items-center ">
             <div className={`h-8 w-8 rounded-full ${iconBgClass} mr-2`}>

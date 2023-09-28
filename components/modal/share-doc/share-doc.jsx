@@ -28,7 +28,11 @@ const ShareDocument = (props) => {
       />
 
       {notifyScreen ? (
-        <NotifyPeople usersToNotify={usersToNotify} />
+        <NotifyPeople
+          usersToNotify={usersToNotify}
+          setNotifyScreen={setNotifyScreen}
+          setUsersToNotify={setUsersToNotify}
+        />
       ) : (
         <>
           <SearchUsers
