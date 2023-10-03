@@ -8,15 +8,6 @@ const GeneralAccess = ({ currAccessType, setCurrAccessType }) => {
   const accessTypeDetails = ACCESS_TYPES[currAccessType];
   const iconBgClass = ACCESS_TYPES[currAccessType].className;
 
-  console.log(
-    "ACCESS_TYPES\n",
-    ACCESS_TYPES,
-    "currAccessType\n",
-    currAccessType,
-    "ACCESS_TYPES[currAccessType]",
-    ACCESS_TYPES[currAccessType]
-  );
-
   const handleSelectAccessType = (key) => {
     setCurrAccessType(key);
     showTypeDropdown(false);

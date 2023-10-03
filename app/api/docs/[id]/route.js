@@ -71,3 +71,52 @@ export async function DELETE(request, { params }) {
     session.endSession();
   }
 }
+
+export async function PUT(request, { params }) {
+  try {
+    const checkAuth = await authCheck(request);
+    if (!checkAuth.auth) return checkAuth.response;
+
+    const docId = params.id.toString();
+    const userId = checkAuth.response.payload.id;
+
+    const jsonBody = await request.json();
+    const {
+      name,
+      content,
+      editors,
+      viewers,
+      ownerId,
+      isStarred,
+      createdAt,
+      isTemplate,
+      accessType,
+    } = jsonBody;
+
+    await connectToDatabase();
+
+    let updateObj = {
+      name,
+      content,
+      editors,
+      viewers,
+      ownerId,
+      isStarred,
+      createdAt,
+      _id: docId,
+      isTemplate,
+      accessType,
+      updatedAt: new Date(),
+    };
+
+    await documentModel.findByIdAndUpdate({ _id: docId }, updateObj);
+
+    return responseTemplate(200, {
+      message: "Document updated successfully",
+    });
+  } catch (error) {
+    return responseTemplate(404, error);
+  } finally {
+    session.endSession();
+  }
+}

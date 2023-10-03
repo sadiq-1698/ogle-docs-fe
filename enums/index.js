@@ -8,20 +8,34 @@ export const RESUME = "resume";
 export const GENERAL = "General";
 export const RESTRICTED = "Restricted";
 
+export const VIEWER = "Viewer";
+export const EDITOR = "Editor";
+
 export const ACCESS_TYPES = {
   [RESTRICTED]: {
     key: RESTRICTED,
     text: RESTRICTED,
     component: <Lock />,
-    className: 'bg-grey-10',
+    className: "bg-grey-10",
     description: "Only people with access can open with the link",
   },
   [GENERAL]: {
     key: GENERAL,
     text: "Anyone with the link",
     component: <GeneralIcon />,
-    className: 'bg-green-1',
+    className: "bg-green-1",
     description: "Anyone on the internet with the link can view",
+  },
+};
+
+export const DOC_ROLES = {
+  [VIEWER]: {
+    key: VIEWER,
+    text: VIEWER,
+  },
+  [EDITOR]: {
+    key: EDITOR,
+    text: EDITOR,
   },
 };
 

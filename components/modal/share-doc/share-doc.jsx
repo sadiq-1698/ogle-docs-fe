@@ -12,6 +12,8 @@ const snackBarStyles = { minWidth: "auto" };
 const ShareDocument = (props) => {
   const { _id: docId, closeModal, accessType, name: docName } = props;
 
+  console.log("Props", props);
+
   const [notifyScreen, setNotifyScreen] = useState(false);
   const [usersToNotify, setUsersToNotify] = useState(null);
   const [displaySnackBar, setDisplaySnackBar] = useState(false);

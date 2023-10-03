@@ -1,11 +1,19 @@
-import CaretDown from "@/elements/caret-down";
+import { DOC_ROLES } from "@/enums";
 import Close from "@/elements/close";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import CaretDown from "@/elements/caret-down";
 
 const NotifyPeople = ({ usersToNotify, setNotifyScreen, setUsersToNotify }) => {
+  const [currRole, setCurrRole] = useState(null);
+  const [showRolesDropdown, setShowDropDown] = useState(false);
+
   const handleUserCloseClick = (user) => {
-    const filteredArr = usersToNotify.filter((el) => el._id !== user._id);
-    setUsersToNotify([...filteredArr]);
+    if (user) {
+      const filteredArr = usersToNotify.filter((el) => el._id !== user._id);
+      setUsersToNotify([...filteredArr]);
+    } else {
+      setUsersToNotify([]);
+    }
   };
 
   useEffect(() => {
@@ -33,9 +41,30 @@ const NotifyPeople = ({ usersToNotify, setNotifyScreen, setUsersToNotify }) => {
             );
           })}
         </div>
-        <button className="h-12 p-0.5 w-1/5 ml-2 border-2 border-solid border-gray-400 px-4 rounded-md flex items-center hover:bg-grey-6">
-          Role
+
+        <button
+          style={{ width: "26%" }}
+          onClick={() => setShowDropDown((s) => !s)}
+          className="h-12 p-0.5 ml-2 border-2 border-solid border-gray-400 px-4 rounded-md flex justify-between items-center hover:bg-grey-6 relative"
+        >
+          {!currRole ? "Role" : currRole.text}
           <CaretDown />
+          {showRolesDropdown && (
+            <div className="bg-white w-full absolute left-0 top-11 shadow-dropdown py-2">
+              {Object.keys(DOC_ROLES).map(function (key) {
+                return (
+                  <button
+                    key={DOC_ROLES[key].key}
+                    style={{ width: "110%" }}
+                    onClick={() => setCurrRole(DOC_ROLES[key])}
+                    className="bg-white py-3 px-4 hover:bg-grey-10 text-start"
+                  >
+                    {DOC_ROLES[key].text}
+                  </button>
+                );
+              })}
+            </div>
+          )}
         </button>
       </div>
 
@@ -47,7 +76,10 @@ const NotifyPeople = ({ usersToNotify, setNotifyScreen, setUsersToNotify }) => {
       </div>
 
       <div className="flex items-center justify-end px-6">
-        <button className="text-sm text-blue-700 px-3 py-2 mr-3 hover:bg-blue-100 rounded-3xl font-semibold">
+        <button
+          onClick={() => handleUserCloseClick()}
+          className="text-sm text-blue-700 px-3 py-2 mr-3 hover:bg-blue-100 rounded-3xl font-semibold"
+        >
           Cancel
         </button>
         <button className="text-sm text-white bg-blue-700 hover:bg-blue-900 px-3 py-2 rounded-3xl font-semibold">

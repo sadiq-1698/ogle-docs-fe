@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
-
-const RESTRICTED = "Restricted";
+const { RESTRICTED } = require("@/enums");
 
 const DocumentSchema = new mongoose.Schema(
   {
