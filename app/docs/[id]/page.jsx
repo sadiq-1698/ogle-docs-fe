@@ -11,9 +11,10 @@ import { useSocket } from "@/providers/socket-provider";
 import { getDocById } from "@/utils/api/docs/get-by-id";
 import DocStatusBtns from "@/components/doc-status-btns";
 import { useSnackbar } from "@/providers/snackbar-provider";
+import BgColorTempSolution from "@/components/temp-solution";
 import { useCallback, useEffect, useRef, useState } from "react";
-import getDocumentName from "@/utils/rich-text-editor/get-document-name";
 import { deleteAllDocuments } from "@/utils/api/docs/delete-all";
+import getDocumentName from "@/utils/rich-text-editor/get-document-name";
 
 const QuillWrapper = dynamic(
   async () => {
@@ -206,6 +207,7 @@ export default function DocFilePage({ params }) {
       </Nav>
       <div className="nav-holder h-14 w-full"></div>
       <section className="doc-editor">
+        <BgColorTempSolution />
         <QuillWrapper
           theme="snow"
           modules={modules}
