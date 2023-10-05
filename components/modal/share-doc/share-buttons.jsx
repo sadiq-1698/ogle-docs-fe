@@ -3,8 +3,11 @@ import LinkIcon from "@/elements/link";
 import Spinner from "@/elements/spinner";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { updateDocument } from "@/utils/api/docs/update-by-id";
+import { EDITOR, VIEWER } from "@/enums";
 
 const ShareButtons = ({
+  usersList,
+  userRoles,
   closeModal,
   docDetails,
   setDocument,
@@ -18,14 +21,27 @@ const ShareButtons = ({
     displaySnackbar("Copied to clipboard");
   };
 
+  const getUserIdsWithRole = (role) => {
+    return usersList
+      ?.map((user, idx) => {
+        if (userRoles[idx] === role) return user._id;
+      })
+      .filter((el) => el);
+  };
+
   const handleSetGeneralAccess = async () => {
     setLoading(true);
+    const updateObj = {
+      accessType: currAccessType,
+      editors: getUserIdsWithRole(EDITOR),
+      viewers: getUserIdsWithRole(VIEWER),
+    };
     const response = await updateDocument({
       ...docDetails,
-      accessType: currAccessType,
+      ...updateObj,
     });
     if (response && response.data) {
-      setDocument((prev) => ({ ...prev, accessType: currAccessType }));
+      setDocument((prev) => ({ ...prev, ...updateObj }));
       displaySnackbar("Doc access updated!");
       setLoading(false);
       closeModal();

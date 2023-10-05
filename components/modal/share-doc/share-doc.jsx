@@ -36,6 +36,8 @@ const ShareDocument = (props) => {
     name: docName,
   };
 
+  const [usersList, setUsersList] = useState(null);
+  const [userRoles, setUserRoles] = useState(null);
   const [notifyScreen, setNotifyScreen] = useState(false);
   const [usersToNotify, setUsersToNotify] = useState(null);
   const [currAccessType, setCurrAccessType] = useState(accessType);
@@ -67,7 +69,13 @@ const ShareDocument = (props) => {
             setUsersToNotify={setUsersToNotify}
           />
 
-          <PeopleWithAccess docDetails={docDetails} />
+          <PeopleWithAccess
+            usersList={usersList}
+            userRoles={userRoles}
+            docDetails={docDetails}
+            setUserRoles={setUserRoles}
+            setUsersList={setUsersList}
+          />
 
           <GeneralAccess
             currAccessType={currAccessType}
@@ -75,6 +83,8 @@ const ShareDocument = (props) => {
           />
 
           <ShareButtons
+            usersList={usersList}
+            userRoles={userRoles}
             closeModal={closeModal}
             docDetails={docDetails}
             setDocument={setDocument}

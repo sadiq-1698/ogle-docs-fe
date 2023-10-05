@@ -4,10 +4,14 @@ import { COLORS, DOC_ROLES } from "@/enums";
 import CaretDown from "@/elements/caret-down";
 import { getUsersWithAccess } from "@/utils/api/users/get-with-access";
 
-const PeopleWithAccess = ({ docDetails }) => {
+const PeopleWithAccess = ({
+  usersList,
+  userRoles,
+  docDetails,
+  setUsersList,
+  setUserRoles,
+}) => {
   const [loading, setLoading] = useState(false);
-  const [usersList, setUsersList] = useState(null);
-  const [userRoles, setUserRoles] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
 
   const getUserRole = (user, role) => {
