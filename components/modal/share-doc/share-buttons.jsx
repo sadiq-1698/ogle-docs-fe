@@ -16,7 +16,6 @@ const ShareButtons = ({
   // Utility functions
   const handleCopy = () => {
     displaySnackbar("Copied to clipboard");
-    closeModal();
   };
 
   const handleSetGeneralAccess = async () => {

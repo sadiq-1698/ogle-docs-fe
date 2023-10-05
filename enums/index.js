@@ -41,6 +41,13 @@ export const DOC_ROLES = {
   },
 };
 
+export const COLORS = [
+  "bg-purple-800",
+  "bg-red-800",
+  "bg-green-800",
+  "bg-gray-800",
+];
+
 export const SAMPLE_RESUME_MD = `<br><br>
 <h1>Resume</h1>
 <h2>Emily</h2>

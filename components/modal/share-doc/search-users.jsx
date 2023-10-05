@@ -5,7 +5,7 @@ import { getSearchUsers } from "@/utils/api/users/get-search-users";
 const SearchUsers = ({ setNotifyScreen, setUsersToNotify }) => {
   const [search, setSearch] = useState(null);
   const [searchList, setSearchList] = useState(null);
-  const [searchValue, setSearchValue] = useState(null);
+  const [searchValue, setSearchValue] = useState("");
 
   // react hook definitions
   // eslint-disable-next-line react-hooks/exhaustive-deps
