@@ -2,6 +2,7 @@ import Head from "next/head";
 import "../../../styles/globals.css";
 import "react-quill/dist/quill.snow.css";
 import { SocketProvider } from "@/providers/socket-provider";
+import SnackbarProvider from "@/providers/snackbar-provider";
 
 export default function DocFileLayout({ children }) {
   return (
@@ -10,7 +11,9 @@ export default function DocFileLayout({ children }) {
         <title>Document | Ogle Docs</title>
         <meta name="description" content="Your document" />
       </Head>
-      <SocketProvider>{children}</SocketProvider>
+      <SocketProvider>
+        <SnackbarProvider>{children}</SnackbarProvider>
+      </SocketProvider>
     </>
   );
 }

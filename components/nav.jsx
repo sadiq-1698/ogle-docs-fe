@@ -9,7 +9,13 @@ import ProfileContainer from "./auth/profile-container";
 import ShareDocument from "./modal/share-doc/share-doc";
 import getProfileLetter from "@/utils/auth/get-profile-letter";
 
-export default function Nav({ children, share, document }) {
+export default function Nav({
+  children,
+  share,
+  document,
+  setDocument,
+  snackbarUtils,
+}) {
   const modalUtils = useModal();
   const { isOpen, component, toggleModal } = modalUtils;
 
@@ -18,8 +24,10 @@ export default function Nav({ children, share, document }) {
 
   const shareProps = {
     ...document,
+    setDocument,
     profileLetter,
     ...modalUtils,
+    ...snackbarUtils,
   };
 
   const handleShareClick = () => {

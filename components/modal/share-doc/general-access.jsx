@@ -15,7 +15,7 @@ const GeneralAccess = ({ currAccessType, setCurrAccessType }) => {
 
   return (
     <>
-      <span className="font-medium px-5">General access</span>
+      <span className="font-medium px-5 mt-4 inline-block">General access</span>
 
       <div className="py-2 hover:bg-grey-10">
         <div className="px-5">

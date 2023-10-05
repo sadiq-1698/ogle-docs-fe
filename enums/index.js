@@ -32,10 +32,12 @@ export const DOC_ROLES = {
   [VIEWER]: {
     key: VIEWER,
     text: VIEWER,
+    arrayName: "viewers",
   },
   [EDITOR]: {
     key: EDITOR,
     text: EDITOR,
+    arrayName: "editors",
   },
 };
 

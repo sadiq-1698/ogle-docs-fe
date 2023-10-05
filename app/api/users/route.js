@@ -41,8 +41,8 @@ const getUsersListWithAccessToDocs = async (docId) => {
 
     const userIds = [
       document.ownerId.toString(),
-      [...document.viewers],
-      [...document.editors],
+      ...document.viewers,
+      ...document.editors,
     ];
 
     const usersList = await usersModel

@@ -1,7 +1,7 @@
 import handleResponse from "../handle-response";
 
 export async function updateDocument(docData) {
-  const response = await fetch(`/api/docs`, {
+  const response = await fetch(`/api/docs/${docData.id}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",

@@ -4,11 +4,13 @@ import dynamic from "next/dynamic";
 import Nav from "@/components/nav";
 import debounce from "lodash.debounce";
 import NavLogo from "@/components/nav-logo";
+import Snackbar from "@mui/material/Snackbar";
 import formats from "@/utils/rich-text-editor/format";
 import modules from "@/utils/rich-text-editor/modules";
 import { useSocket } from "@/providers/socket-provider";
 import { getDocById } from "@/utils/api/docs/get-by-id";
 import DocStatusBtns from "@/components/doc-status-btns";
+import { useSnackbar } from "@/providers/snackbar-provider";
 import { useCallback, useEffect, useRef, useState } from "react";
 import getDocumentName from "@/utils/rich-text-editor/get-document-name";
 import { deleteAllDocuments } from "@/utils/api/docs/delete-all";
@@ -26,8 +28,13 @@ const QuillWrapper = dynamic(
   }
 );
 
+const snackBarStyles = { minWidth: "auto" };
+
 export default function DocFilePage({ params }) {
+  const snackbarUtils = useSnackbar();
   const { socket, isConnected } = useSocket();
+
+  const { snackBarMsg, showSnackBar, closeSnackbar } = snackbarUtils;
 
   const quillRef = useRef();
 
@@ -40,6 +47,8 @@ export default function DocFilePage({ params }) {
   // Utility constants
   const navProps = {
     share: true,
+    setDocument,
+    snackbarUtils,
     document: document,
   };
 
@@ -204,6 +213,16 @@ export default function DocFilePage({ params }) {
           forwardedRef={quillRef}
         />
       </section>
+
+      <Snackbar
+        key={snackBarMsg}
+        open={showSnackBar}
+        message={snackBarMsg}
+        style={snackBarStyles}
+        autoHideDuration={2000}
+        onClose={() => closeSnackbar()}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      />
     </>
   );
 }

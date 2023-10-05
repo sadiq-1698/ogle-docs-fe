@@ -81,6 +81,7 @@ export async function PUT(request, { params }) {
     const userId = checkAuth.response.payload.id;
 
     const jsonBody = await request.json();
+
     const {
       name,
       content,
@@ -103,7 +104,6 @@ export async function PUT(request, { params }) {
       ownerId,
       isStarred,
       createdAt,
-      _id: docId,
       isTemplate,
       accessType,
       updatedAt: new Date(),
@@ -116,7 +116,5 @@ export async function PUT(request, { params }) {
     });
   } catch (error) {
     return responseTemplate(404, error);
-  } finally {
-    session.endSession();
   }
 }

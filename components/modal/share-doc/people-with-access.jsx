@@ -4,15 +4,25 @@ import { getUsersWithAccess } from "@/utils/api/users/get-with-access";
 
 const COLORS = ["bg-purple-800", "bg-red-800", "bg-green-800", "bg-gray-800"];
 
-const PeopleWithAccess = ({ docId }) => {
+const PeopleWithAccess = ({ docDetails }) => {
   const [loading, setLoading] = useState(false);
   const [usersList, setUsersList] = useState(null);
+
+  const getUserRole = (user) => {
+    if (user._id === localStorage.getItem("userId")) {
+      return "Owner";
+    } else if (docDetails.editors.includes(user._id)) {
+      return "Editor";
+    } else {
+      return "Viewer";
+    }
+  };
 
   // use effect definitions
   useEffect(() => {
     const fetchUsersWithAccess = async () => {
       setLoading(true);
-      const response = await getUsersWithAccess(docId);
+      const response = await getUsersWithAccess(docDetails.id);
       if (response.data) {
         setUsersList(response.data.usersList);
         setLoading(false);
@@ -37,7 +47,7 @@ const PeopleWithAccess = ({ docId }) => {
         usersList.map((user, index) => {
           const bgClass = COLORS[index % COLORS.length];
           return (
-            <div className="bg-white hover:bg-grey-6 py-2 mb-4" key={user._id}>
+            <div className="bg-white hover:bg-grey-6 py-2" key={user._id}>
               <div className="px-5">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
@@ -60,7 +70,9 @@ const PeopleWithAccess = ({ docId }) => {
                     </div>
                   </div>
 
-                  <span className="text-sm text-grey-2">Owner</span>
+                  <span className="text-sm text-grey-2">
+                    {getUserRole(user)}
+                  </span>
                 </div>
               </div>
             </div>

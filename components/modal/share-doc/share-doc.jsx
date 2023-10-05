@@ -2,21 +2,42 @@ import { useState } from "react";
 import ShareHeader from "./share-header";
 import SearchUsers from "./search-users";
 import ShareButtons from "./share-buttons";
-import GeneralAccess from "./general-access";
-import Snackbar from "@mui/material/Snackbar";
-import PeopleWithAccess from "./people-with-access";
 import NotifyPeople from "./notify-people";
-
-const snackBarStyles = { minWidth: "auto" };
+import GeneralAccess from "./general-access";
+import PeopleWithAccess from "./people-with-access";
 
 const ShareDocument = (props) => {
-  const { _id: docId, closeModal, accessType, name: docName } = props;
+  const {
+    ownerId,
+    content,
+    viewers,
+    editors,
+    _id: docId,
+    createdAt,
+    isStarred,
+    isTemplate,
+    closeModal,
+    accessType,
+    setDocument,
+    name: docName,
+    displaySnackbar,
+  } = props;
 
-  console.log("Props", props);
+  const docDetails = {
+    ownerId,
+    content,
+    viewers,
+    editors,
+    id: docId,
+    createdAt,
+    isStarred,
+    isTemplate,
+    accessType,
+    name: docName,
+  };
 
   const [notifyScreen, setNotifyScreen] = useState(false);
   const [usersToNotify, setUsersToNotify] = useState(null);
-  const [displaySnackBar, setDisplaySnackBar] = useState(false);
   const [currAccessType, setCurrAccessType] = useState(accessType);
 
   return (
@@ -31,7 +52,11 @@ const ShareDocument = (props) => {
 
       {notifyScreen ? (
         <NotifyPeople
+          docDetails={docDetails}
+          closeModal={closeModal}
+          setDocument={setDocument}
           usersToNotify={usersToNotify}
+          displaySnackbar={displaySnackbar}
           setNotifyScreen={setNotifyScreen}
           setUsersToNotify={setUsersToNotify}
         />
@@ -42,23 +67,22 @@ const ShareDocument = (props) => {
             setUsersToNotify={setUsersToNotify}
           />
 
-          <PeopleWithAccess docId={docId} />
+          <PeopleWithAccess docDetails={docDetails} />
 
           <GeneralAccess
             currAccessType={currAccessType}
             setCurrAccessType={setCurrAccessType}
           />
 
-          <ShareButtons setDisplaySnackBar={setDisplaySnackBar} />
+          <ShareButtons
+            closeModal={closeModal}
+            docDetails={docDetails}
+            setDocument={setDocument}
+            currAccessType={currAccessType}
+            displaySnackbar={displaySnackbar}
+          />
         </>
       )}
-
-      <Snackbar
-        open={displaySnackBar}
-        style={snackBarStyles}
-        message="Copied to clipboard"
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-      />
     </div>
   );
 };

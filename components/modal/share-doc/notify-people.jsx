@@ -1,9 +1,20 @@
-import { DOC_ROLES } from "@/enums";
+import { DOC_ROLES, EDITOR, VIEWER } from "@/enums";
 import Close from "@/elements/close";
 import { useEffect, useState } from "react";
 import CaretDown from "@/elements/caret-down";
+import { updateDocument } from "@/utils/api/docs/update-by-id";
+import Spinner from "@/elements/spinner";
 
-const NotifyPeople = ({ usersToNotify, setNotifyScreen, setUsersToNotify }) => {
+const NotifyPeople = ({
+  docDetails,
+  closeModal,
+  setDocument,
+  usersToNotify,
+  displaySnackbar,
+  setNotifyScreen,
+  setUsersToNotify,
+}) => {
+  const [loading, setLoading] = useState(false);
   const [currRole, setCurrRole] = useState(null);
   const [showRolesDropdown, setShowDropDown] = useState(false);
 
@@ -13,6 +24,53 @@ const NotifyPeople = ({ usersToNotify, setNotifyScreen, setUsersToNotify }) => {
       setUsersToNotify([...filteredArr]);
     } else {
       setUsersToNotify([]);
+    }
+  };
+
+  const handleSendInvite = async () => {
+    const userId = usersToNotify[0]._id;
+    const isEditor = docDetails.editors.findIndex((el) => el === userId);
+    const isViewer = docDetails.viewers.findIndex((el) => el === userId);
+
+    let result;
+
+    if (
+      (isEditor >= 0 && currRole.key === EDITOR) ||
+      (isViewer >= 0 && currRole.key === VIEWER)
+    ) {
+      closeModal();
+      return;
+    }
+
+    if (isEditor < 0 && isViewer < 0) {
+      result = {
+        [currRole.arrayName]: [...docDetails[currRole.arrayName], userId],
+      };
+    }
+
+    if (isEditor >= 0 && currRole.key === VIEWER) {
+      result = {
+        viewers: [...docDetails.viewers, userId],
+        editors: docDetails.viewers.slice(isEditor),
+      };
+    }
+
+    if (isViewer >= 0 && currRole.key === EDITOR) {
+      result = {
+        editors: [...docDetails.editors, userId],
+        viewers: docDetails.editors.slice(isViewer),
+      };
+    }
+
+    setLoading(true);
+
+    const response = await updateDocument({ ...docDetails, ...result });
+
+    if (response && response.data) {
+      setDocument((prev) => ({ ...prev, ...result }));
+      displaySnackbar("User access updated");
+      setLoading(false);
+      closeModal();
     }
   };
 
@@ -82,8 +140,12 @@ const NotifyPeople = ({ usersToNotify, setNotifyScreen, setUsersToNotify }) => {
         >
           Cancel
         </button>
-        <button className="text-sm text-white bg-blue-700 hover:bg-blue-900 px-3 py-2 rounded-3xl font-semibold">
-          Send
+        <button
+          onClick={() => handleSendInvite()}
+          style={{ minWidth: "58px", minHeight: "36px" }}
+          className="text-sm text-white bg-blue-700 hover:bg-blue-900 px-3 py-2 rounded-3xl font-semibold flex items-center justify-center"
+        >
+          {loading ? <Spinner size={20} /> : "Send"}
         </button>
       </div>
     </div>

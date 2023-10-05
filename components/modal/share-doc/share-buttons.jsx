@@ -1,13 +1,36 @@
+import { useState } from "react";
 import LinkIcon from "@/elements/link";
+import Spinner from "@/elements/spinner";
 import { CopyToClipboard } from "react-copy-to-clipboard";
+import { updateDocument } from "@/utils/api/docs/update-by-id";
 
-const ShareButtons = ({ setDisplaySnackBar }) => {
+const ShareButtons = ({
+  closeModal,
+  docDetails,
+  setDocument,
+  currAccessType,
+  displaySnackbar,
+}) => {
+  const [loading, setLoading] = useState(false);
+
   // Utility functions
   const handleCopy = () => {
-    setDisplaySnackBar(true);
-    setTimeout(() => {
-      setDisplaySnackBar(false);
-    }, 2000);
+    displaySnackbar("Copied to clipboard");
+    closeModal();
+  };
+
+  const handleSetGeneralAccess = async () => {
+    setLoading(true);
+    const response = await updateDocument({
+      ...docDetails,
+      accessType: currAccessType,
+    });
+    if (response && response.data) {
+      setDocument((prev) => ({ ...prev, accessType: currAccessType }));
+      displaySnackbar("Doc access updated!");
+      setLoading(false);
+      closeModal();
+    }
   };
 
   return (
@@ -22,8 +45,11 @@ const ShareButtons = ({ setDisplaySnackBar }) => {
         </button>
       </CopyToClipboard>
 
-      <button className="rounded-3xl bg-blue-700 text-white font-semibold p-2 px-4 text-sm hover:shadow-search smooth-scale">
-        Done
+      <button
+        onClick={() => handleSetGeneralAccess()}
+        className="rounded-3xl bg-blue-700 text-white font-semibold p-2 px-4 text-sm hover:shadow-search smooth-scale"
+      >
+        {loading ? <Spinner size={20} /> : "Done"}
       </button>
     </div>
   );
