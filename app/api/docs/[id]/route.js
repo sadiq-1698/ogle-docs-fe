@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { NextResponse } from "next/server";
 import documentModel from "@/models/document";
 import connectToDatabase from "@/lib/db-connect";
 import authCheck from "@/utils/api/auth/check-auth";
@@ -7,6 +8,8 @@ import responseTemplate from "@/utils/api/response-template";
 const connection = mongoose.connection;
 
 export async function GET(request, { params }) {
+  const { url } = request;
+
   try {
     const checkAuth = await authCheck(request);
     if (!checkAuth.auth) return checkAuth.response;
@@ -22,11 +25,24 @@ export async function GET(request, { params }) {
       });
     }
 
+    const hasAccess = [
+      documentExists.ownerId.toString(),
+      ...documentExists.viewers,
+      ...documentExists.editors,
+    ].includes(checkAuth.response.payload.id);
+
+    if (!hasAccess) {
+      return responseTemplate(403, {
+        message: "You do not have access to this document",
+      });
+    }
+
     return responseTemplate(200, {
       document: documentExists,
       message: "Document fetched successfully",
     });
   } catch (error) {
+    console.log(error);
     return responseTemplate(404, error);
   }
 }

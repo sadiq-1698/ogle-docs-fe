@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import Nav from "@/components/nav";
 import debounce from "lodash.debounce";
+import { useRouter } from "next/navigation";
 import NavLogo from "@/components/nav-logo";
 import Snackbar from "@mui/material/Snackbar";
 import formats from "@/utils/rich-text-editor/format";
@@ -32,6 +33,7 @@ const QuillWrapper = dynamic(
 const snackBarStyles = { minWidth: "auto" };
 
 export default function DocFilePage({ params }) {
+  const router = useRouter();
   const snackbarUtils = useSnackbar();
   const { socket, isConnected } = useSocket();
 
@@ -118,6 +120,11 @@ export default function DocFilePage({ params }) {
     const fetchDocById = async (docId) => {
       setIsSaving(true);
       const response = await getDocById(docId);
+      if (response.error) {
+        if (response.status === 403) {
+          router.replace("/auth");
+        }
+      }
       if (response.data) {
         setIsSaving(false);
         setDocument(response.data.document);
@@ -188,43 +195,49 @@ export default function DocFilePage({ params }) {
 
   return (
     <>
-      <Nav {...navProps}>
-        {/* <button onClick={async () => await deleteAllDocuments()}>Simply</button> */}
-        <NavLogo>
-          <input
-            value={docName}
-            onBlur={handleDocNameSave}
-            onChange={handleDocNameChange}
-            className="text-xl text-gray-600 ml-2 w-40 whitespace-nowrap overflow-hidden text-ellipsis outline-none"
-          />
-          <DocStatusBtns
-            className="ml-4"
-            starred={starred}
-            setStarred={setStarred}
-          />
-          <span className="ml-2 text-xs">{isSaving ? "Saving..." : ""}</span>
-        </NavLogo>
-      </Nav>
-      <div className="nav-holder h-14 w-full"></div>
-      <section className="doc-editor">
-        <BgColorTempSolution />
-        <QuillWrapper
-          theme="snow"
-          modules={modules}
-          formats={formats}
-          forwardedRef={quillRef}
-        />
-      </section>
+      {document && (
+        <>
+          <Nav {...navProps}>
+            {/* <button onClick={async () => await deleteAllDocuments()}>Simply</button> */}
+            <NavLogo>
+              <input
+                value={docName}
+                onBlur={handleDocNameSave}
+                onChange={handleDocNameChange}
+                className="text-xl text-gray-600 ml-2 w-40 whitespace-nowrap overflow-hidden text-ellipsis outline-none"
+              />
+              <DocStatusBtns
+                className="ml-4"
+                starred={starred}
+                setStarred={setStarred}
+              />
+              <span className="ml-2 text-xs">
+                {isSaving ? "Saving..." : ""}
+              </span>
+            </NavLogo>
+          </Nav>
+          <div className="nav-holder h-14 w-full"></div>
+          <section className="doc-editor">
+            <BgColorTempSolution />
+            <QuillWrapper
+              theme="snow"
+              modules={modules}
+              formats={formats}
+              forwardedRef={quillRef}
+            />
+          </section>
 
-      <Snackbar
-        key={snackBarMsg}
-        open={showSnackBar}
-        message={snackBarMsg}
-        style={snackBarStyles}
-        autoHideDuration={2000}
-        onClose={() => closeSnackbar()}
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-      />
+          <Snackbar
+            key={snackBarMsg}
+            open={showSnackBar}
+            message={snackBarMsg}
+            style={snackBarStyles}
+            autoHideDuration={2000}
+            onClose={() => closeSnackbar()}
+            anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          />
+        </>
+      )}
     </>
   );
 }

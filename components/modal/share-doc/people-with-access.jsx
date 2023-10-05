@@ -17,7 +17,7 @@ const PeopleWithAccess = ({
   const getUserRole = (user, role) => {
     if (role) return role;
 
-    if (user._id === localStorage.getItem("userId")) {
+    if (user._id === docDetails.ownerId) {
       return "Owner";
     } else if (docDetails.editors.includes(user._id)) {
       return "Editor";
