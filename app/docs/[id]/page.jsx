@@ -222,6 +222,10 @@ export default function DocFilePage({ params }) {
           modules={modules}
           formats={formats}
           forwardedRef={quillRef}
+          readOnly={
+            document &&
+            document.viewers.includes(localStorage.getItem("userId"))
+          }
         />
       </section>
 
