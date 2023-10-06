@@ -43,6 +43,7 @@ module.exports = {
           8: "#e8ebee",
           9: "#444746",
           10: "rgb(241,243,244)",
+          11: '#5f6368'
         },
         blue: {
           default: "blue",
