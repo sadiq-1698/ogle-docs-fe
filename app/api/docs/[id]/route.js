@@ -27,8 +27,8 @@ export async function GET(request, { params }) {
 
     const hasAccess = [
       documentExists.ownerId.toString(),
-      ...documentExists.viewers,
-      ...documentExists.editors,
+      ...documentExists.viewers.map((el) => el.toString()),
+      ...documentExists.editors.map((el) => el.toString()),
     ].includes(checkAuth.response.payload.id);
 
     if (!hasAccess) {
