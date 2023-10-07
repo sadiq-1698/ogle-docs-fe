@@ -14,6 +14,9 @@ const PeopleWithAccess = ({
   const [loading, setLoading] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
 
+  const isCurrUserOwner =
+    localStorage?.getItem("userId") === docDetails.ownerId;
+
   const getUserRole = (user, role) => {
     if (role) return role;
 
@@ -26,11 +29,13 @@ const PeopleWithAccess = ({
     }
   };
 
-  const handleRoleClick = (index) => {
-    if (showDropdown === index) {
-      setShowDropdown(false);
-    } else {
-      setShowDropdown(index);
+  const handleRoleClick = (index, user) => {
+    if (isCurrUserOwner && getUserRole(user) !== "Owner") {
+      if (showDropdown === index) {
+        setShowDropdown(false);
+      } else {
+        setShowDropdown(index);
+      }
     }
   };
 
@@ -111,15 +116,20 @@ const PeopleWithAccess = ({
 
                   <div style={{ width: "100px" }} className="relative">
                     <button
-                      onClick={() => handleRoleClick(index)}
+                      onClick={() => handleRoleClick(index, user)}
                       className={`w-full h-12 p-0.5 px-4 rounded-md flex justify-${
-                        index === 0 ? "end" : "between"
+                        user._id === docDetails.ownerId || !isCurrUserOwner
+                          ? "end cursor-default"
+                          : "between"
                       } items-center hover:bg-grey-6 relative`}
                     >
                       <span className="text-sm text-grey-2 text-left">
                         {userRoles[index]}
                       </span>
-                      {getUserRole(user) !== "Owner" && <CaretDown />}
+
+                      {isCurrUserOwner && getUserRole(user) !== "Owner" && (
+                        <CaretDown />
+                      )}
                     </button>
 
                     {getUserRole(user) !== "Owner" &&
