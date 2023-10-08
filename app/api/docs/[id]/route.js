@@ -103,12 +103,16 @@ export async function PATCH(request, { params }) {
     const documentExists = await documentModel.findById(docId);
 
     if (!documentExists) {
+      await session.abortTransaction();
+      session.endSession();
       return responseTemplate(404, {
         message: "Document not found!",
       });
     }
 
     if (documentExists.ownerId.toString() !== userId.toString()) {
+      await session.abortTransaction();
+      session.endSession();
       return responseTemplate(403, {
         message: "Unauthorized!",
       });
@@ -124,11 +128,14 @@ export async function PATCH(request, { params }) {
 
       await session.commitTransaction();
 
+      session.endSession();
+
       return responseTemplate(200, {
         message: "Document updated successfully",
       });
     } catch (error) {
       await session.abortTransaction();
+      session.endSession();
     }
   } catch (error) {
     return responseTemplate(404, error);
