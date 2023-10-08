@@ -69,18 +69,22 @@ export default function Nav({
           <></>
         )}
 
-        <div className="relative">
-          <button
-            onClick={() => {
-              setShowProfile(false);
-              setShowNotifications((s) => !s);
-            }}
-            className="hover:bg-grey-7 rounded-full transition-all p-1"
-          >
-            <NotificationIcon />
-          </button>
-          {showNotifications ? <NotifyContainer /> : <></>}
-        </div>
+        {!share ? (
+          <div className="relative ml-3">
+            <button
+              onClick={() => {
+                setShowProfile(false);
+                setShowNotifications((s) => !s);
+              }}
+              className="hover:bg-grey-7 rounded-full transition-all p-1"
+            >
+              <NotificationIcon />
+            </button>
+            {showNotifications ? <NotifyContainer /> : <></>}
+          </div>
+        ) : (
+          <></>
+        )}
 
         <div className="nav-profile relative">
           <button

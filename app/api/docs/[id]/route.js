@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { RESTRICTED } from "@/enums";
+import requestModel from "@/models/request";
 import documentModel from "@/models/document";
 import connectToDatabase from "@/lib/db-connect";
 import authCheck from "@/utils/api/auth/check-auth";
@@ -77,11 +78,60 @@ export async function DELETE(request, { params }) {
       }
     );
 
+    session.endSession();
     return response;
   } catch (error) {
     return responseTemplate(404, error);
-  } finally {
-    session.endSession();
+  }
+}
+
+export async function PATCH(request, { params }) {
+  try {
+    const checkAuth = await authCheck(request);
+    if (!checkAuth.auth) return checkAuth.response;
+
+    const docId = params.id.toString();
+    const userId = checkAuth.response.payload.id;
+
+    const { grantedUserId, requestId } = await request.json();
+
+    await connectToDatabase();
+    const session = await connection.startSession();
+
+    session.startTransaction();
+
+    const documentExists = await documentModel.findById(docId);
+
+    if (!documentExists) {
+      return responseTemplate(404, {
+        message: "Document not found!",
+      });
+    }
+
+    if (documentExists.ownerId.toString() !== userId.toString()) {
+      return responseTemplate(403, {
+        message: "Unauthorized!",
+      });
+    }
+
+    try {
+      await documentModel.findByIdAndUpdate(
+        { _id: docId },
+        { viewers: [...documentExists.viewers, grantedUserId] }
+      );
+
+      await requestModel.findByIdAndDelete(requestId);
+
+      await session.commitTransaction();
+
+      return responseTemplate(200, {
+        message: "Document updated successfully",
+      });
+    } catch (error) {
+      await session.abortTransaction();
+    }
+  } catch (error) {
+    return responseTemplate(404, error);
   }
 }
 
@@ -91,7 +141,6 @@ export async function PUT(request, { params }) {
     if (!checkAuth.auth) return checkAuth.response;
 
     const docId = params.id.toString();
-    const userId = checkAuth.response.payload.id;
 
     const jsonBody = await request.json();
 
