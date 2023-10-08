@@ -62,10 +62,14 @@ const NotifyContainer = () => {
             <div className="py-2">
               {requestsList.map((request) => {
                 return (
-                  <div className="px-3 pt-3 pb-1 hover:bg-gray-100 border-b border-solid border-gray-300 ">
+                  <div
+                    key={request._id}
+                    className="px-3 pt-3 pb-1 hover:bg-gray-100 border-b border-solid border-gray-300 "
+                  >
                     <p className="text-sm">
                       <strong>{request.userName}</strong> has requested access
-                      to your document <strong>"{request.docName}"</strong>
+                      to your document{" "}
+                      <strong>&quot;{request.docName}&quot;</strong>
                     </p>
                     <div className="flex justify-center mt-2">
                       <button

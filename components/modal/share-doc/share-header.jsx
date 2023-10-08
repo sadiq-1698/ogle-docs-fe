@@ -25,7 +25,7 @@ const ShareHeader = ({
           </button>
         )}
         <span className="font-medium" style={{ fontSize: "22px" }}>
-          Share "{docName}"
+          Share &quot;{docName}&quot;
         </span>
       </div>
       <button

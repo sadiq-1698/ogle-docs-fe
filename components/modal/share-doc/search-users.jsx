@@ -65,6 +65,7 @@ const SearchUsers = ({ setNotifyScreen, setUsersToNotify }) => {
             searchList.map((user) => {
               return (
                 <button
+                  key={user._id}
                   onClick={() => handleSelectUser(user)}
                   className="py-2 px-3 flex items-center w-full bg-grey-7 hover:bg-gray-200"
                 >
