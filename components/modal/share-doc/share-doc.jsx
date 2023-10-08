@@ -78,6 +78,7 @@ const ShareDocument = (props) => {
           />
 
           <GeneralAccess
+            docDetails={docDetails}
             currAccessType={currAccessType}
             setCurrAccessType={setCurrAccessType}
           />

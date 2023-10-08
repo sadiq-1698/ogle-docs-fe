@@ -4,6 +4,7 @@ import documentModel from "@/models/document";
 import connectToDatabase from "@/lib/db-connect";
 import authCheck from "@/utils/api/auth/check-auth";
 import responseTemplate from "@/utils/api/response-template";
+import { RESTRICTED } from "@/enums";
 
 const connection = mongoose.connection;
 
@@ -31,7 +32,7 @@ export async function GET(request, { params }) {
       ...documentExists.editors.map((el) => el.toString()),
     ].includes(checkAuth.response.payload.id);
 
-    if (!hasAccess) {
+    if (!hasAccess && documentExists.accessType === RESTRICTED) {
       return responseTemplate(403, {
         message: "You do not have access to this document",
       });
