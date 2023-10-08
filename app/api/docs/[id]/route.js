@@ -8,8 +8,6 @@ import responseTemplate from "@/utils/api/response-template";
 const connection = mongoose.connection;
 
 export async function GET(request, { params }) {
-  const { url } = request;
-
   try {
     const checkAuth = await authCheck(request);
     if (!checkAuth.auth) return checkAuth.response;
@@ -42,7 +40,6 @@ export async function GET(request, { params }) {
       message: "Document fetched successfully",
     });
   } catch (error) {
-    console.log(error);
     return responseTemplate(404, error);
   }
 }

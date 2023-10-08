@@ -11,6 +11,7 @@ export async function POST(request, { params }) {
 
     const docId = params.id.toString();
     const userId = checkAuth.response.payload.id;
+    const userName = checkAuth.response.userName;
 
     await connectToDatabase();
 
@@ -21,6 +22,7 @@ export async function POST(request, { params }) {
     }
 
     const requestObj = {
+      userName: userName,
       from: userId.toString(),
       docId: docId.toString(),
       docName: documentExists.name,

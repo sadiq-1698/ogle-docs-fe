@@ -53,6 +53,12 @@ export async function POST(request) {
       path: "/",
     });
 
+    response.cookies.set({
+      name: "userName",
+      value: userExists.name,
+      path: "/",
+    });
+
     return response;
   } catch (error) {
     return responseTemplate(404, error);

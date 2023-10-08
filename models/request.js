@@ -7,6 +7,10 @@ const RequestSchema = new mongoose.Schema(
       ref: "users",
       required: true,
     },
+    userName: {
+      type: String,
+      required: true,
+    },
     to: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "users",

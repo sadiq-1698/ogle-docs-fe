@@ -7,13 +7,15 @@ import { RESTRICTED } from "@/enums";
 import { useState, useEffect } from "react";
 import GeneralIcon from "@/elements/general";
 import useModal from "@/elements/hooks/useModal";
+import NotifyContainer from "./notify-container";
+import NotificationIcon from "@/elements/notification";
 import ProfileContainer from "./auth/profile-container";
 import ShareDocument from "./modal/share-doc/share-doc";
 import getProfileLetter from "@/utils/auth/get-profile-letter";
 
 export default function Nav({
-  children,
   share,
+  children,
   document,
   setDocument,
   snackbarUtils,
@@ -23,6 +25,7 @@ export default function Nav({
 
   const [showProfile, setShowProfile] = useState(false);
   const [profileLetter, setProfileLetter] = useState("");
+  const [showNotifications, setShowNotifications] = useState(false);
 
   const shareProps = {
     ...document,
@@ -66,15 +69,31 @@ export default function Nav({
           <></>
         )}
 
-        <div className="nav-profile cursor-pointer relative">
-          <div
-            onClick={() => setShowProfile((s) => !s)}
+        <div className="relative">
+          <button
+            onClick={() => {
+              setShowProfile(false);
+              setShowNotifications((s) => !s);
+            }}
+            className="hover:bg-grey-7 rounded-full transition-all p-1"
+          >
+            <NotificationIcon />
+          </button>
+          {showNotifications ? <NotifyContainer /> : <></>}
+        </div>
+
+        <div className="nav-profile relative">
+          <button
+            onClick={() => {
+              setShowNotifications(false);
+              setShowProfile((s) => !s);
+            }}
             className="h-9 w-9 bg-red-800 rounded-full mx-3 flex items-center justify-center"
           >
             <span className="text-white font-bold text-sm">
               {profileLetter}
             </span>
-          </div>
+          </button>
           {showProfile ? (
             <ProfileContainer
               profileLetter={profileLetter}

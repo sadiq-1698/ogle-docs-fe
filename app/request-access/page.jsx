@@ -29,6 +29,9 @@ export default function RequestAccessPage() {
       const response = await createRequest(searchParams.get("doc"));
       if (response.data) {
         displaySnackbar("Access request sent!");
+        setTimeout(() => {
+          router.replace("/");
+        }, 2000);
       }
     } catch (error) {
       displaySnackbar("Failed sending request!");
