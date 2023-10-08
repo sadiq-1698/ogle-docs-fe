@@ -1,15 +1,33 @@
 "use client";
 
 import Image from "next/image";
+import Spinner from "@/elements/spinner";
 import { useEffect, useState } from "react";
 import OgleLogoIcon from "@/elements/ogle-logo";
 import { useRouter, useSearchParams } from "next/navigation";
+import { createRequest } from "@/utils/api/requests/create";
 
 export default function RequestAccessPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
+  const [loading, setLoading] = useState(false);
   const [validUrl, setValidUrl] = useState(false);
+
+  // Utility functions
+  const handleRequestAccess = async () => {
+    setLoading(true);
+    try {
+      const response = await createRequest(searchParams.get("doc"));
+      if (response.data) {
+        console.log("Success!", response);
+      }
+    } catch (error) {
+      console.log("Failure");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     const docId = searchParams.get("doc");
@@ -42,8 +60,11 @@ export default function RequestAccessPage() {
               className="mt-4 w-full border-2 border-solid border-gray-400 focus:border-blue-700 outline-none rounded-md p-3 px-4"
             />
 
-            <button className="mt-4 rounded-3xl bg-blue-700 text-white font-semibold p-2 px-5 text-sm hover:shadow-search smooth-scale">
-              Request access
+            <button
+              onClick={() => handleRequestAccess()}
+              className="mt-4 rounded-3xl bg-blue-700 text-white font-semibold p-2 px-5 text-sm hover:shadow-search smooth-scale"
+            >
+              {loading ? <Spinner size={20} /> : "Send"}
             </button>
           </div>
 
