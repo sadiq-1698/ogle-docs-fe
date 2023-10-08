@@ -2,14 +2,22 @@
 
 import Image from "next/image";
 import Spinner from "@/elements/spinner";
+import { Snackbar } from "@mui/material";
 import { useEffect, useState } from "react";
 import OgleLogoIcon from "@/elements/ogle-logo";
-import { useRouter, useSearchParams } from "next/navigation";
 import { createRequest } from "@/utils/api/requests/create";
+import { useSnackbar } from "@/providers/snackbar-provider";
+import { useRouter, useSearchParams } from "next/navigation";
+
+const snackBarStyles = { minWidth: "auto" };
 
 export default function RequestAccessPage() {
   const router = useRouter();
+  const snackbarUtils = useSnackbar();
   const searchParams = useSearchParams();
+
+  const { snackBarMsg, showSnackBar, closeSnackbar, displaySnackbar } =
+    snackbarUtils;
 
   const [loading, setLoading] = useState(false);
   const [validUrl, setValidUrl] = useState(false);
@@ -20,10 +28,10 @@ export default function RequestAccessPage() {
     try {
       const response = await createRequest(searchParams.get("doc"));
       if (response.data) {
-        console.log("Success!", response);
+        displaySnackbar("Access request sent!");
       }
     } catch (error) {
-      console.log("Failure");
+      displaySnackbar("Failed sending request!");
     } finally {
       setLoading(false);
     }
@@ -79,6 +87,16 @@ export default function RequestAccessPage() {
       ) : (
         <></>
       )}
+
+      <Snackbar
+        key={snackBarMsg}
+        open={showSnackBar}
+        message={snackBarMsg}
+        style={snackBarStyles}
+        autoHideDuration={2000}
+        onClose={() => closeSnackbar()}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      />
     </>
   );
 }

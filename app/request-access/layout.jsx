@@ -1,4 +1,5 @@
 import "../../styles/globals.css";
+import SnackbarProvider from "@/providers/snackbar-provider";
 
 export const metadata = {
   title: "Access Denied",
@@ -9,7 +10,9 @@ export const metadata = {
 export default function AccessPageLayout({ children }) {
   return (
     <>
-      <div className="mt-20 min-h-screen flex justify-center">{children}</div>
+      <SnackbarProvider>
+        <div className="mt-20 min-h-screen flex justify-center">{children}</div>
+      </SnackbarProvider>
     </>
   );
 }

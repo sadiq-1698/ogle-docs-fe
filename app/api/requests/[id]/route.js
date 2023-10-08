@@ -48,7 +48,6 @@ export async function POST(request, { params }) {
 
     return responseTemplate(200, requestInfo);
   } catch (error) {
-    console.log("Error", error);
     return responseTemplate(404, error);
   }
 }
