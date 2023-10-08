@@ -31,15 +31,16 @@ export async function POST(request, { params }) {
       docId: docId.toString(),
     });
 
-    console.log("requestExists", requestExists);
-
     if (requestExists) {
       await requestModel.findByIdAndUpdate(
         { _id: requestExists._id.toString() },
         { updatedAt: new Date() }
       );
 
-      return responseTemplate(200, { ...requestExists._doc, updatedAt: new Date() });
+      return responseTemplate(200, {
+        ...requestExists._doc,
+        updatedAt: new Date(),
+      });
     }
 
     const newRequest = new requestModel(requestObj);
