@@ -3,13 +3,18 @@
 import dynamic from "next/dynamic";
 import Nav from "@/components/nav";
 import debounce from "lodash.debounce";
+import { useRouter } from "next/navigation";
 import NavLogo from "@/components/nav-logo";
+import Snackbar from "@mui/material/Snackbar";
 import formats from "@/utils/rich-text-editor/format";
 import modules from "@/utils/rich-text-editor/modules";
 import { useSocket } from "@/providers/socket-provider";
 import { getDocById } from "@/utils/api/docs/get-by-id";
 import DocStatusBtns from "@/components/doc-status-btns";
+import { useSnackbar } from "@/providers/snackbar-provider";
+import BgColorTempSolution from "@/components/temp-solution";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { deleteAllDocuments } from "@/utils/api/docs/delete-all";
 import getDocumentName from "@/utils/rich-text-editor/get-document-name";
 
 const QuillWrapper = dynamic(
@@ -25,8 +30,14 @@ const QuillWrapper = dynamic(
   }
 );
 
+const snackBarStyles = { minWidth: "auto" };
+
 export default function DocFilePage({ params }) {
+  const router = useRouter();
+  const snackbarUtils = useSnackbar();
   const { socket, isConnected } = useSocket();
+
+  const { snackBarMsg, showSnackBar, closeSnackbar } = snackbarUtils;
 
   const quillRef = useRef();
 
@@ -35,6 +46,14 @@ export default function DocFilePage({ params }) {
   const [document, setDocument] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
   const [saveValue, setSaveValue] = useState(null);
+
+  // Utility constants
+  const navProps = {
+    share: true,
+    setDocument,
+    snackbarUtils,
+    document: document,
+  };
 
   // Utility functions
   const handleDocNameChange = (e) => {
@@ -101,6 +120,11 @@ export default function DocFilePage({ params }) {
     const fetchDocById = async (docId) => {
       setIsSaving(true);
       const response = await getDocById(docId);
+      if (response.error) {
+        if (response.status === 403) {
+          router.replace(`/request-access?doc=${docId}`);
+        }
+      }
       if (response.data) {
         setIsSaving(false);
         setDocument(response.data.document);
@@ -166,12 +190,15 @@ export default function DocFilePage({ params }) {
 
   // joining doc room on socket connection
   useEffect(() => {
-    if (isConnected) socket?.emit("join-doc", params.id.toString());
+    if (isConnected) {
+      socket?.emit("join-doc", params.id.toString());
+    }
   }, [isConnected]);
 
   return (
     <>
-      <Nav share>
+      <Nav {...navProps}>
+        {/* <button onClick={async () => await deleteAllDocuments()}>Simply</button> */}
         <NavLogo>
           <input
             value={docName}
@@ -188,14 +215,29 @@ export default function DocFilePage({ params }) {
         </NavLogo>
       </Nav>
       <div className="nav-holder h-14 w-full"></div>
+      <BgColorTempSolution />
       <section className="doc-editor">
         <QuillWrapper
           theme="snow"
           modules={modules}
           formats={formats}
           forwardedRef={quillRef}
+          readOnly={
+            document &&
+            document.viewers.includes(localStorage.getItem("userId"))
+          }
         />
       </section>
+
+      <Snackbar
+        key={snackBarMsg}
+        open={showSnackBar}
+        message={snackBarMsg}
+        style={snackBarStyles}
+        autoHideDuration={2000}
+        onClose={() => closeSnackbar()}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      />
     </>
   );
 }

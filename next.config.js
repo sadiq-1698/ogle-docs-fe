@@ -26,11 +26,6 @@ const nextConfig = {
         destination: "/auth/login",
         permanent: true,
       },
-      {
-        source: "/docs",
-        destination: "/docs/new/",
-        permanent: true,
-      },
     ];
   },
 };

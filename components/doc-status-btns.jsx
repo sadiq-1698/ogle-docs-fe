@@ -9,7 +9,7 @@ export default function DocStatusBtns({ starred, className, setStarred }) {
       <button onClick={() => setStarred((s) => !s)}>
         {starred ? <Star /> : <StarOutlined />}
       </button>
-      <button onClick={() => handleDocSave()}>
+      <button onClick={() => {}}>
         <SaveDoc />
       </button>
     </div>

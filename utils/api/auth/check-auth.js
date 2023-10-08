@@ -4,6 +4,7 @@ import { verifyJwtToken } from "@/lib/auth";
 const authCheck = async (request) => {
   const { cookies } = request;
   const { value: token } = cookies.get("accessToken") ?? { value: null };
+  const { value: userName } = cookies.get("userName") ?? { value: null };
 
   const hasVerifiedToken = token && (await verifyJwtToken(token));
 
@@ -18,7 +19,7 @@ const authCheck = async (request) => {
     return { auth: false, response };
   }
 
-  return { auth: true, response: hasVerifiedToken };
+  return { auth: true, response: { ...hasVerifiedToken, userName } };
 };
 
 export default authCheck;

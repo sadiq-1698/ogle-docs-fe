@@ -7,7 +7,7 @@ const profileContainerStyles = {
   minHeight: "210px",
 };
 
-const ProfileContainer = ({ profileLtter, setShowProfile }) => {
+const ProfileContainer = ({ profileLetter, setShowProfile }) => {
   const router = useRouter();
 
   const handleLogout = async () => {
@@ -34,7 +34,7 @@ const ProfileContainer = ({ profileLtter, setShowProfile }) => {
         </button>
       </div>
       <div className="h-16 w-16 bg-red-800 rounded-full mt-6 mb-2 flex items-center justify-center">
-        <span className="text-white font-bold text-2xl">{profileLtter}</span>
+        <span className="text-white font-bold text-2xl">{profileLetter}</span>
       </div>
       <span className="text-2xl mb-3">
         Hi, {localStorage.getItem("name").toString().split(" ")[0]}

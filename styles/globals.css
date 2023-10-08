@@ -22,6 +22,15 @@ code {
     @apply w-full;
 }
 
+.share-doc-container {
+    min-width: 510px;
+}
+
+.smooth-scale:hover {
+    transform: scale(1.0001);
+    transition: all .05s ease-in-out;
+}
+
 .doc-editor .quill .ql-toolbar.ql-snow {
     @apply flex justify-center w-11/12 mx-auto bg-grey-6 rounded-3xl border-none p-0;
 }
@@ -38,6 +47,10 @@ code {
 .doc-editor .quill .ql-container.ql-snow .ql-editor {
     @apply w-full lg:w-1/2 shadow-lg border border-solid border-gray-400;
     min-height: calc(100vh - 155px);
+}
+
+.css-1eqdgzv-MuiPaper-root-MuiSnackbarContent-root {
+    min-width: auto !important;
 }
 
 @keyframes rotating {

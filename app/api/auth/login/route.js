@@ -5,7 +5,7 @@ import userModel from "../../../../models/user";
 import connectToDatabase from "@/lib/db-connect";
 import responseTemplate from "@/utils/api/response-template";
 
-function createUserInfoObject(allowedInfo, userObject) {
+export function createUserInfoObject(allowedInfo, userObject) {
   let result = {};
   for (let i = 0; i < allowedInfo.length; i++) {
     if (userObject[allowedInfo[i]]) {
@@ -50,6 +50,12 @@ export async function POST(request) {
     response.cookies.set({
       name: "accessToken",
       value: jwtToken,
+      path: "/",
+    });
+
+    response.cookies.set({
+      name: "userName",
+      value: userExists.name,
       path: "/",
     });
 

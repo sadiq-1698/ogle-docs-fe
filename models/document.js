@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { RESTRICTED } = require("@/enums");
 
 const DocumentSchema = new mongoose.Schema(
   {
@@ -19,7 +20,23 @@ const DocumentSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    userId: {
+    accessType: {
+      type: String,
+      default: RESTRICTED,
+    },
+    editors: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "users",
+      },
+    ],
+    viewers: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "users",
+      },
+    ],
+    ownerId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "users",
     },
